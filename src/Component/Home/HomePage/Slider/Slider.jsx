@@ -11,6 +11,8 @@ import './style.css';
 
 import { EffectFade, Pagination, Autoplay } from 'swiper/modules';
 
+
+
 export default function App() {
   return (
     <>
@@ -20,12 +22,12 @@ export default function App() {
         pagination={{
           clickable: true,
         }}
-       
+
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
         }}
-        modules={[EffectFade,  Pagination, Autoplay]}
+        modules={[EffectFade, Pagination, Autoplay]}
         className="mySwiper"
       >
         <SwiperSlide>
@@ -61,17 +63,7 @@ export default function App() {
             </figure>
           </div>
         </SwiperSlide>
-        <SwiperSlide>
-          <div className="card w-[95%] mt-3">
-            <figure>
-              <img
-                src="https://i.ibb.co/KWsSkFj/Gemini-Generated-Image-7x1sjp7x1sjp7x1s-1.jpg"
-                alt="Healthy Food Products"
-                className="rounded-xl"
-              />
-            </figure>
-          </div>
-        </SwiperSlide>
+       
       </Swiper>
     </>
   );

@@ -58,6 +58,7 @@ const Header = () => {
                 {showNav && (
                     <div>
                         <img src="https://i.ibb.co/mSC0cV4/Gemini-Generated-Image-6fnebt6fnebt6fne-removebg-preview.png" alt="logo" className="w-24 h-16" />
+                       
                     </div>
                 )}
             </div>

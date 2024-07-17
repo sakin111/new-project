@@ -38,3 +38,9 @@ body {
 }
 
 
+.path {
+  transition: all 0.3s ease-in-out;
+  fill: url(#gradient);
+  fill-opacity: 0.4;
+  background-image: url("https://i.ibb.co/HP5bV1b/Gemini-Generated-Image-8k588x8k588x8k58-1.jpg");
+}
