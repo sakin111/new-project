@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../../Hook/useAxiosPublic";
 import "./Section1.css"
+import { Link } from "react-router-dom";
 
 const Section1 = () => {
 
@@ -9,10 +10,10 @@ const Section1 = () => {
     const axiosPublic = useAxiosPublic();
 
     const { data = [], isLoading, error } = useQuery({
-        queryKey: ['Slider'],
+        queryKey: ['card'],
         queryFn: async () => {
             try {
-                const response = await axiosPublic.get('/slider');
+                const response = await axiosPublic.get('/card');
                 return response.data;
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -29,7 +30,7 @@ const Section1 = () => {
             <h1 className="text-5xl text-gray-500 font-semibold p-3  text-center my-14 textColor1">পুষ্টিকর পোরিজ মিক্স</h1>
 
 
-            <div className="grid grid-cols-3 gap-2 mx-auto max-w-7xl">
+            <div className="grid grid-cols-4 gap-5 mx-auto max-w-7xl">
                 {
                     data.map((item, idx) => (
 
@@ -42,7 +43,7 @@ const Section1 = () => {
 
 
                                     </div>
-                                    <img width={260} height={260} className="h-full w-full rounded-lg bg-black/40" src={item.imageFront} alt="card navigate ui" />
+                                    <img width={260} height={260} className="h-full w-full rounded-lg bg-black/40" src={item.imageFront} alt="card" />
                                 </div>
                                 <div className="space-y-2 font-semibold ">
                                     <div className="flex justify-between items-start">
@@ -58,7 +59,7 @@ const Section1 = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap items-center justify-between gap-6 text-sm md:text-base">
-                                    <button className="rounded-lg bg-[#49B2FF] px-4 py-2 font-semibold text-white duration-300 hover:scale-105 hover:bg-sky-600">View Details</button>
+                                    <Link to={`/card/${item._id}`}><button className="rounded-lg bg-[#49B2FF] px-4 py-2 font-semibold text-white duration-300 hover:scale-105 hover:bg-sky-600">View Details</button></Link>
                                  
                                 </div>
                             </div>

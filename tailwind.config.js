@@ -7,8 +7,12 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        banglaFont: ["Noto Sans Bengali", "sans-serif"]
+        banglaFont: ["Noto Sans Bengali", "sans-serif"],
+        'dancing-script': ['Dancing Script', 'cursive'],
+        'Lato': ['Lato', 'sans-serif'],
+       'Roboto': ['Roboto', 'sans-serif']
       },
+      
     },
   },
 

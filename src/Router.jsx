@@ -3,6 +3,8 @@ import Main from "./Component/Main/Main";
 import HomePage from "./Component/Home/HomePage/HomePage";
 import Login from "./Component/Shared/Login/Login";
 import SignUp from "./Component/Shared/SignUp/SignUp";
+import Section1 from "./Component/Home/HomePage/Section1/Section1";
+import Section1Details from "./Component/Home/HomePage/Section1/Section1Details/Section1Details";
 
 
 
@@ -28,6 +30,15 @@ const router = createBrowserRouter([
             {
                 path: "/signup",
                 element: <SignUp></SignUp>
+            },
+            {
+                path:"/card",
+                element:<Section1></Section1>
+            },
+            {
+                path: "/card/:id",
+                element: <Section1Details></Section1Details>,
+                loader: ({ params }) => fetch(`http://localhost:5000/card/${params.id}`)
             },
            
          
