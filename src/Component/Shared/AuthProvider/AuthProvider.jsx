@@ -1,7 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 
 
-const AuthContext = createContext(null)
+export const AuthContext = createContext(null)
 
 
 
@@ -9,7 +9,7 @@ const AuthProvider = ({children}) => {
  
 const [user, setuser] = useState(null)
 
-
+const targetRef = useRef(null)
 
 
 
@@ -19,6 +19,7 @@ const [user, setuser] = useState(null)
 
 const authInfo = {
     user,
+    targetRef
     // loading,
     // createUser,
     // logOut,

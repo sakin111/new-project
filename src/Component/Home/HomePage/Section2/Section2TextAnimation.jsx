@@ -1,16 +1,16 @@
 
 import { motion } from 'framer-motion';
 
-const splitText = (card) => {
-    return card.split('');
+const splitText = (cardMix) => {
+    return cardMix.split('');
 }
 
 
 
-const Section1TextAnimation = ({card,cardMix}) => {
+const Section2TextAnimation = ({cardMix}) => {
 
 
-    const characters = splitText(card,cardMix)
+    const characters = splitText(cardMix)
 
 
 
@@ -48,4 +48,4 @@ const Section1TextAnimation = ({card,cardMix}) => {
     );
 };
 
-export default Section1TextAnimation;
+export default Section2TextAnimation;

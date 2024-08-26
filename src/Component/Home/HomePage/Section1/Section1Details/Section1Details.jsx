@@ -1,96 +1,130 @@
-
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import Section1TextAnimation from "./Section1TextAnimation";
 import Section1Span from "./Section1Span";
-
+import AddCartButton from "./AddCartButton";
+import useAxiosPublic from "../../../../Hook/useAxiosPublic";
+import Swal from "sweetalert2";
 
 const Section1Details = () => {
 
-  const card = useLoaderData()
-  console.log(card, "card item")
+const axiosPublic = useAxiosPublic()
+const formRef = useRef(null)
 
-  const [selectedPrice, setSelectedPrice] = useState(null);
-  const [count, setCount] = useState(0)
+const handleForm = (e) =>{
+  e.preventDefault()
+  const form = e.target
+  const count = form.count.value
+  const imageFront = card.imageFront
+  const price = form.price.value
 
-  const handleSizeClick = (price) => {
-    setSelectedPrice(price);
-  };
-
-  const handleAdd = () => {
-    if (count < 100) {
-      setCount(count + 1)
-    }
+const addInfo = {imageFront, count ,price}
+try{
+  const mongoResponse = axiosPublic.post("/addToCart", addInfo)
+  if (mongoResponse.data.insertedId) {
+    console.log('Room created successfully');
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Room created successfully',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    formRef.current.reset();
   }
-  const handleReduce = () => {
-    if (count > 0) {
-      setCount(count - 1)
-    }
-  }
+}
+   catch (error) {
+  console.error('Error:', error);
+  Swal.fire({
+    position: 'center',
+    icon: 'error',
+    title: 'An error occurred',
+    text: error.message,
+    showConfirmButton: true
+  });
+}
 
+}
+
+
+
+
+
+
+
+
+
+
+
+  const card = useLoaderData();
+  const [selectedPrice, setSelectedPrice] = useState(card.size[0]?.price || 0);
+  const [count, setCount] = useState(0);
+
+  const handleSizeClick = (price) => setSelectedPrice(price);
+  const handleAdd = () => setCount((prev) => Math.min(prev + 1, 100));
+  const handleReduce = () => setCount((prev) => Math.max(prev - 1, 0));
 
   return (
-    <div className="bg-white  min-h-screen min-w-max">
-      <div className="flex flex-col items-start justify-center gap-4 pt-6 md:flex-row">
-        <div className="">
-          <img width={700} height={800} className=" rounded-lg " src={card.imageFront} alt="card" />
-          <Section1Span card={card}></Section1Span>
-          <div className="w-2/3 h-[1px] bg-slate-200 my-3 mt-7 ml-7"></div>
-          <div className="max-w-[500px] ml-7 mt-4">
-            <h3 className="font-banglaFont mb-5 text-cyan-400 ml-3">ডেলিভারী</h3>
-            <p className="text-cyan-400 text-lg font-banglaFont ml-3">অর্ডার প্লেস করার পর আমাদের একজন কাস্টমার প্রতিনিধি ফোন কলের মাধ্যমে অর্ডারটি কনফার্ম করে নিবে।
+    <div className="bg-white min-h-screen " onSubmit={handleForm} ref={formRef} >
+      <div className="flex flex-col items-center justify-center gap-6 pt-6 lg:flex-row lg:items-start lg:justify-center  px-20">
+        {/* Image and Description */}
+        <div className="w-full lg:w-full xl:w-2/3 px-2 md:px-4">
+          <img width={600} height={600} className="rounded-lg " src={card.imageFront} alt="card"/>
+          <Section1Span card={card} />
+          <div className="w-[500px] h-[1px] bg-slate-200 my-7"></div>
+          <div className="max-w-[500px]">
+            <h3 className="font-banglaFont mb-5 text-cyan-400">ডেলিভারী</h3>
+            <p className="text-cyan-400 text-lg font-banglaFont">
+              অর্ডার প্লেস করার পর আমাদের একজন কাস্টমার প্রতিনিধি ফোন কলের মাধ্যমে অর্ডারটি কনফার্ম করে নিবে।
               অর্ডার কনফার্ম করার ২-৩ দিনের মধ্যেই সারা বাংলাদেশ হোম ডেলিভারী পেয়ে যাবেন, ইনশাআল্লাহ।
-              ডেলিভারী চার্জ = ১০০ টাকা।</p>
+              ডেলিভারী চার্জ = ১০০ টাকা।
+            </p>
           </div>
-
-
         </div>
 
-
-        <div className="min-w-[600px]   rounded-br-lg rounded-tr-lg px-10 text-start md:w-[350px] ">
-          <div className="space-y-1">
-            <h2 className="text-start text-3xl font-semibold  font-custom font-banglaFont  textColor1 lg:text-5xl">{card.name}</h2>
-            <p className="textColor1 text-xl font-banglaFont py-2">{card.title}</p>
+        {/* Product Details and Actions */}
+        <div className="w-full lg:w-1/3 xl:w-1/3 px-2 md:px-4">
+          <div className="space-y-2 text-center lg:text-left">
+            <h2 className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-semibold font-banglaFont textColor1">{card.name}</h2>
+            <p className="textColor1 text-lg md:text-xl font-banglaFont">{card.title}</p>
+            <p className="textColor1 text-2xl">TK {selectedPrice}</p>
           </div>
-          <div className="flex flex-wrap items-center justify-between">
-            <div className="space-y-1 my-3">
-              <p className="textColor1 text-2xl">
-                TK {selectedPrice !== null ? selectedPrice : card.size[0].price}
-              </p>
 
-            </div>
-
-          </div>
-          <div className="my-4">
-            {card.size.map((size, index) => (
-
+          {/* Size Selection */}
+          <div className="my-4 flex flex-wrap justify-center lg:justify-start">
+            {card.size?.map((size, index) => (
               <button
                 key={index}
-
-                className="mr-3 rounded-full border border-[#0d87f8] px-4 py-2 text-base text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white duration-300 dark:hover:bg-transparent dark:hover:text-[#0d87f8] dark:hover:drop-shadow-[0px_0px_2px_#0d87f8] font-medium"
+                name="price"
+                className="mr-3 mb-3 rounded-full border border-[#0d87f8] px-4 py-2 text-base text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white duration-300"
                 onClick={() => handleSizeClick(size.price)}
               >
                 {size.count}
               </button>
-
             ))}
           </div>
+
+          {/* Quantity Control */}
           <div className="mt-5">
             <span className="text-sm textColor1 italic">Quantity</span>
-            <div className="mt-6">
-              <button className="mr-3 rounded-full border border-[#0d87f8] px-4 py-2 text-base text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white duration-300 dark:hover:bg-transparent dark:hover:text-[#0d87f8] dark:hover:drop-shadow-[0px_0px_2px_#0d87f8] font-medium">
+            <div className="mt-4 flex items-center justify-center lg:justify-start">
+              <button className="rounded-full border border-[#0d87f8] px-4 py-2 text-base text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white duration-300">
                 <span onClick={handleAdd} className="text-lg">+</span>
                 <span className="mx-7">{count}</span>
                 <span onClick={handleReduce} className="text-lg">-</span>
               </button>
             </div>
           </div>
-          <div className="my-10 mx-auto w-full">
-            <button className="btn btn-wide  rounded-full bg-gradient-to-r  from-cyan-400 to-cyan-400 text-white  text-lg font-Roboto">Add to Cart</button>
+
+          {/* Add to Cart Button */}
+          <div className="my-10 mx-auto w-full text-center lg:text-left" >
+            <AddCartButton />
           </div>
+
+          {/* Product Facts */}
           <div className="my-5">
             <h3 className="text-2xl mb-3 textColor1">পাওয়ার ফ্যাক্টসঃ</h3>
-            <Section1TextAnimation card={card.description}></Section1TextAnimation>
+            <Section1TextAnimation card={card.description} />
           </div>
         </div>
       </div>
@@ -99,15 +133,3 @@ const Section1Details = () => {
 };
 
 export default Section1Details;
-
-
-
-
-
-// <button className="rounded-full border border-[#0d87f8] px-4 py-2 text-sm text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white  duration-300 dark:hover:bg-transparent dark:hover:text-[#0d87f8] dark:hover:drop-shadow-[0px_0px_2px_#0d87f8]">SEND MESSAGE</button>
-
-
-// <span className="absolute -bottom-6 left-1/2 z-30 flex h-[40px] w-[40px] -translate-x-1/2 transform items-center  justify-center rounded-full bg-white bg-gradient-to-tr from-[#0d87f8]  to-[#70c4ff] duration-500 group-hover:rotate-180 group-hover:shadow-[0px_0px_30px_2px_#0d87f8]"><svg width={25} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><g id="style=linear"><g id="add"><path id="vector" d="M11.998 5.84424L11.998 18.1604" stroke="#9EE6FD" strokeWidth="2" strokeLinecap="round"></path><path id="vector_2" d="M18.1561 12.002L5.83998 12.0019" stroke="#9EE6FD" strokeWidth="2" strokeLinecap="round"></path></g></g></g></svg></span>
-
-{/* <span className="absolute -bottom-6 left-1/2 z-20 h-0 w-0 -translate-x-1/2 transform rounded-full bg-gradient-to-tr from-[#0d87f8]/80 to-[#70c4ff]/80 duration-300 group-hover:h-[50px] group-hover:w-[50px]"></span>
-<span className="absolute -bottom-6 left-1/2 z-20 h-0 w-0 -translate-x-1/2 transform rounded-full bg-gradient-to-tr from-[#0d87f8]/50 to-[#70c4ff]/50 duration-500 hover:duration-300 group-hover:h-[60px] group-hover:w-[60px] "></span> */}

@@ -5,6 +5,8 @@ import Login from "./Component/Shared/Login/Login";
 import SignUp from "./Component/Shared/SignUp/SignUp";
 import Section1 from "./Component/Home/HomePage/Section1/Section1";
 import Section1Details from "./Component/Home/HomePage/Section1/Section1Details/Section1Details";
+import Dashboard from "./Component/Shared/Dashboard/Dashboard";
+import Section2Details from "./Component/Home/HomePage/Section2/Section2Details";
 
 
 
@@ -41,33 +43,39 @@ const router = createBrowserRouter([
                 loader: ({ params }) => fetch(`http://localhost:5000/card/${params.id}`)
             },
            
+            {
+                path: "/cardMix/:id",
+                element: <Section2Details></Section2Details>,
+                loader: ({ params }) => fetch(`http://localhost:5000/cardMix/${params.id}`)
+            },
+           
          
         
 
         ]
     },
 
-    // {
-    //     path: '/dashboard',
-    //     element:<Dashboard></Dashboard>,
-    //     children: [
-    //         {
-    //             path: '/dashboard/',
-    //             element: <Home></Home>
-    //         },
-    //         {
-    //             path: '/dashboard/addItems',
-    //             element: <AddItem></AddItem>
-    //         },
-    //         {
-    //             path: '/dashboard/users',
-    //             element: <AdminRoute><Users></Users></AdminRoute>  
-    //         },
+    {
+        path: '/dashboard',
+        element:<Dashboard></Dashboard>,
+        children: [
+            {
+                path: '/dashboard/',
+                element: <HomePage></HomePage>
+            },
+            // {
+            //     path: '/dashboard/addItems',
+            //     element: <AddItem></AddItem>
+            // },
+            // {
+            //     path: '/dashboard/users',
+            //     element: <AdminRoute><Users></Users></AdminRoute>  
+            // },
            
 
-    //     ]
+        ]
            
-    // }
+    }
 ]);
 
 
