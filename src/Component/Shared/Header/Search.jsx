@@ -22,7 +22,23 @@ const Search = ({ onSearchIconClick }) => {
         <div className="flex justify-center items-center gap-5 h-16">
             <button onClick={toggleSearchBar} className="">
             {showSearch ? (
-                    <AiOutlineClose className="text-white font-bold w-7 h-7 absolute right-96 transform -translate-x-2/3 -translate-y-4  max-w-md "/>
+                   <AiOutlineClose 
+                   className="
+                       text-white 
+                       font-bold 
+                       absolute 
+                       right-8  /* Adjusted to avoid overflow on smaller screens */
+                       transform 
+                       -translate-x-2/3 
+                       -translate-y-4 
+                       w-6 h-6 /* Default size for small screens */
+                       sm:w-7 sm:h-7 /* Slightly larger on small screens */
+                       md:w-8 md:h-8 /* Larger on medium screens */
+                       lg:right-32 /* Adjust right offset for larger screens */
+                       xl:right-72 /* Further adjust right offset for extra-large screens */
+                   "
+               />
+               
                     
                 ) : (
                     <GoSearch className="text-white font-bold w-7 h-7"/>
@@ -30,7 +46,7 @@ const Search = ({ onSearchIconClick }) => {
             </button>
             {showSearch && (
                 <Box
-                    className="absolute  left-1/2 transform -translate-x-1/2 translate-y-0 w-full max-w-md"
+                    className="absolute left-1/2 transform -translate-x-1/2 w-10/12 sm:w-72 md:w-96 lg:w-5/12 max-w-md xs "
                 >
                     <TextField 
                        sx={{ 

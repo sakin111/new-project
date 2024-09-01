@@ -1,13 +1,14 @@
-import { useContext,  useState } from "react";
+
 import { Link } from "react-router-dom";
 import './Header.css';
 import { CiShoppingCart } from "react-icons/ci";
 import Search from "./Search";
-import { AuthContext } from "../AuthProvider/AuthProvider";
+import { useState } from "react";
+
 
 const Header = () => {
     const [showNav, setShowNav] = useState(true);
-    const {targetRef} = useContext(AuthContext)
+  
 
     const handleSearchIconClick = (isSearchVisible) => {
         setShowNav(!isSearchVisible);
@@ -75,9 +76,9 @@ const Header = () => {
                 <div>
                     <Search onSearchIconClick={handleSearchIconClick}  />
                 </div>
-             <div ref={targetRef}>
+             <div >
              {showNav && (
-                    <CiShoppingCart className="text-white font-bold w-7 h-7"  />
+                    <Link to="/cart"><CiShoppingCart className="text-white font-bold w-7 h-7"  /></Link>
                 )}
              </div>
             </div>

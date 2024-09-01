@@ -7,6 +7,9 @@ import Section1 from "./Component/Home/HomePage/Section1/Section1";
 import Section1Details from "./Component/Home/HomePage/Section1/Section1Details/Section1Details";
 import Dashboard from "./Component/Shared/Dashboard/Dashboard";
 import Section2Details from "./Component/Home/HomePage/Section2/Section2Details";
+import CardOption from "./Component/Shared/CardOption/CardOption";
+
+
 
 
 
@@ -47,6 +50,11 @@ const router = createBrowserRouter([
                 path: "/cardMix/:id",
                 element: <Section2Details></Section2Details>,
                 loader: ({ params }) => fetch(`http://localhost:5000/cardMix/${params.id}`)
+            },
+            {
+                path: "/cart",
+                element: <CardOption></CardOption>,
+             
             },
            
          

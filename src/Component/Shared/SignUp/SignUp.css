@@ -1,0 +1,30 @@
+.border-circle {
+  
+    border: 6px solid transparent;
+    border-radius: 50%;
+    background-clip: padding-box;
+    animation: borderAnimation 4s linear infinite;
+  }
+  
+  @keyframes borderAnimation {
+    0% {
+      border-color: rgb(235, 110, 37);
+      transform: rotate(0deg);
+    }
+    25% {
+      border-color: rgb(106, 106, 209);
+      transform: rotate(90deg);
+    }
+    50% {
+      border-color: rgb(118, 184, 118);
+      transform: rotate(180deg);
+    }
+    75% {
+      border-color: rgb(221, 221, 108);
+      transform: rotate(270deg);
+    }
+    100% {
+      border-color: rgb(47, 187, 168);
+      transform: rotate(360deg);
+    }
+  }

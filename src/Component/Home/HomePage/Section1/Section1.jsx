@@ -28,7 +28,7 @@ const Section1 = () => {
                 পুষ্টিকর পোরিজ মিক্স
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 md:grid-cols-3 md:gap-5  lg:grid-cols-4 lg:gap-32  mx-auto  max-w-7xl  ">
+            <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 md:grid-cols-3 md:gap-5  lg:grid-cols-4 lg:gap-32  mx-auto  max-w-7xl  cardXs">
                 {data.map((item, idx) => (
                     <div key={idx}>
                         <div className="w-full max-w-[340px] space-y-3 rounded-xl bg-white p-4 shadow-lg dark:bg-[#18181B] md:w-[350px] sm:object-cover">

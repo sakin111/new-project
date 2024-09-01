@@ -90,7 +90,7 @@ const Header1 = () => {
 
                 <motion.li variants={itemVariants}>
                  <motion.div>
-                 <LuLogIn /> Login
+                 <LuLogIn /> <Link to="/login">Login</Link>
                  </motion.div>
                   </motion.li>
 
