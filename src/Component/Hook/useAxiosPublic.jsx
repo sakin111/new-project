@@ -12,7 +12,7 @@ const createAxiosInstance = () => {
     async (error) => {
       // If the request fails and it's a network error, switch to production URL
       if (error.code === "ERR_NETWORK") {
-        axiosInstance.defaults.baseURL = "https://new-project-server-l5jy9b984-maliksakin53gmailcoms-projects.vercel.app/";
+        axiosInstance.defaults.baseURL = "https://new-project-server-hvl1awoyf-maliksakin53gmailcoms-projects.vercel.app/";
         try {
           // Retry the request with the production URL
           return await axiosInstance.request(error.config);
