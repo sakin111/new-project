@@ -1,26 +1,38 @@
 import axios from "axios";
 
-const checkLocalhost = async () => {
-  try {
-    // Try to ping the localhost server
-    await axios.get("http://localhost:5000");
-    return "http://localhost:5000";
-  } catch (error) {
-    // If the localhost server is not reachable, fall back to the production URL
-    return "https://new-project-server-l5jy9b984-maliksakin53gmailcoms-projects.vercel.app/";
-  }
+const createAxiosInstance = () => {
+  const axiosInstance = axios.create();
+
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      // If the response is successful, return it
+      return response;
+    },
+    async (error) => {
+      // If the request fails and it's a network error, switch to production URL
+      if (error.code === "ERR_NETWORK") {
+        axiosInstance.defaults.baseURL = "https://new-project-server-l5jy9b984-maliksakin53gmailcoms-projects.vercel.app/";
+        try {
+          // Retry the request with the production URL
+          return await axiosInstance.request(error.config);
+        } catch (retryError) {
+          return Promise.reject(retryError);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  // Initially, try to use localhost
+  axiosInstance.defaults.baseURL = "http://localhost:5000";
+
+  return axiosInstance;
 };
 
-const createAxiosInstance = async () => {
-  const baseURL = await checkLocalhost();
-  return axios.create({
-    baseURL: baseURL,
-  });
-};
-
-const useAxiosPublic = async () => {
-  const axiosInstance = await createAxiosInstance();
+const useAxiosPublic = () => {
+  const axiosInstance = React.useMemo(() => createAxiosInstance(), []);
   return axiosInstance;
 };
 
 export default useAxiosPublic;
+
