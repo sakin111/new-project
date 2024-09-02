@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useMemo } from "react";
 
 const createAxiosInstance = () => {
   const axiosInstance = axios.create();
@@ -30,7 +31,7 @@ const createAxiosInstance = () => {
 };
 
 const useAxiosPublic = () => {
-  const axiosInstance = React.useMemo(() => createAxiosInstance(), []);
+  const axiosInstance = useMemo(() => createAxiosInstance(), []);
   return axiosInstance;
 };
 
