@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-
+//login
 const Login = () => {
     return (
     <div className="w-full bg-white h-full py-32">
