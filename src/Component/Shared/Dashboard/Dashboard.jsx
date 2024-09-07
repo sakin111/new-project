@@ -1,7 +1,8 @@
 import { FaAd, FaBook, FaCalendar, FaEnvelope, FaHome, FaList, FaUsers } from "react-icons/fa";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { NavLink, Outlet } from "react-router-dom";
-// import useAdmin from "../../../Hook/useAdmin";
+import useAdmin from "../../Hook/useAdmin";
+
 
 
 
@@ -9,15 +10,12 @@ import { NavLink, Outlet } from "react-router-dom";
 const Dashboard = () => {
 
 
-// const [isAdmin, isAdminLoading] = useAdmin()
-
-const isAdmin = true
+const [isAdmin, isAdminLoading] = useAdmin()
 
 
-// if(isAdminLoading){
-//     <span className="loading loading-spinner loading-md"></span>
-// }
-
+if(isAdminLoading){
+    <span className="loading loading-spinner loading-md"></span>
+}
 
 
     return (

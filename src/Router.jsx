@@ -8,6 +8,9 @@ import Section1Details from "./Component/Home/HomePage/Section1/Section1Details/
 import Dashboard from "./Component/Shared/Dashboard/Dashboard";
 import Section2Details from "./Component/Home/HomePage/Section2/Section2Details";
 import CardOption from "./Component/Shared/CardOption/CardOption";
+import AdminRoute from "./Component/Shared/Secure/AdminRoute";
+import Users from "./Component/Shared/Dashboard/Users";
+import Private from "./Component/Shared/Secure/Private";
 
 
 
@@ -65,20 +68,16 @@ const router = createBrowserRouter([
 
     {
         path: '/dashboard',
-        element:<Dashboard></Dashboard>,
+        element:<Private><Dashboard></Dashboard></Private>,
         children: [
             {
                 path: '/dashboard/',
                 element: <HomePage></HomePage>
             },
-            // {
-            //     path: '/dashboard/addItems',
-            //     element: <AddItem></AddItem>
-            // },
-            // {
-            //     path: '/dashboard/users',
-            //     element: <AdminRoute><Users></Users></AdminRoute>  
-            // },
+            {
+                path: '/dashboard/users',
+                element:<AdminRoute><Users></Users></AdminRoute>
+            },
            
 
         ]
