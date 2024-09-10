@@ -40,11 +40,11 @@ const Section1 = () => {
                     <div className="space-y-2 font-semibold">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h6 className="text-sm md:text-base lg:text-md font-custom font-banglaFont textColor1">{item.name}</h6>
+                                <h6 className="text-sm md:text-base lg:text-md font-custom font-banglaFont textColor1 text-xs-1">{item.name}</h6>
                                 <p className="textColor1">TK {item.size[0].price}</p>
                             </div>
                             <div>
-                                <span className="rounded-sm px-1 py-1 text-white bg-gradient-to-r from-cyan-400 to-violet-400">
+                                <span className="rounded-sm px-1 py-1 text-white bg-gradient-to-r from-cyan-400 to-violet-400 ">
                                     {item.age} Months
                                 </span>
                             </div>
