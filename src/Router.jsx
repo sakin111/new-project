@@ -46,13 +46,13 @@ const router = createBrowserRouter([
             {
                 path: "/card/:id",
                 element: <Section1Details></Section1Details>,
-                loader: ({ params }) => fetch(`http://localhost:5000/card/${params.id}`)
+                loader: ({ params }) => fetch(`https://new-project-server-hvl1awoyf-maliksakin53gmailcoms-projects.vercel.app/${params.id}`)
             },
            
             {
                 path: "/cardMix/:id",
                 element: <Section2Details></Section2Details>,
-                loader: ({ params }) => fetch(`http://localhost:5000/cardMix/${params.id}`)
+                loader: ({ params }) => fetch(`https://new-project-server-hvl1awoyf-maliksakin53gmailcoms-projects.vercel.app/${params.id}`)
             },
             {
                 path: "/cart",
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
             },
            
          
-        
+            // http://localhost:5000/cardMix/
 
         ]
     },
