@@ -4,6 +4,7 @@ import { createContext, useEffect,  useState } from "react";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 import auth from "../../../../Firebase/Firebase.config";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
+// import { useQuery } from "@tanstack/react-query";
 // import useAxiosPublic from "../../Hook/useAxiosPublic";
 
 
@@ -87,6 +88,22 @@ const logOut = async () => {
 
 
 
+// const { data = []} = useQuery({
+//     queryKey: ['card'],
+//     queryFn: async () => {
+//         try {
+//             const response = await axiosPublic.get('/card');
+//             return response.data;
+//         } catch (error) {
+//             console.error("Error fetching data:", error);
+//             throw error;
+//         }
+//     }
+// });
+
+
+
+
 
 const authInfo = {
     user,
@@ -95,7 +112,8 @@ const authInfo = {
     logOut,
     signInUser,
     googleSignIn,
-    updateUserProfile
+    updateUserProfile,
+ 
   
 }
 
