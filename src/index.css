@@ -24,14 +24,17 @@
 
 
 
-@media (max-width: 576px) {
+  @media (max-width: 576px) {
     .xs {
-        width: 50%; 
-        font-size: 14px; 
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Two columns layout for small screens */
+        gap: 10px; /* Gap between the cards */
+        width: 100%; /* Ensure the grid takes the full width */
     }
-    .cardXs{
-        padding-left: 30px;  /* Adds 16px of padding to the left */
-        padding-right: 30px;
+    .cardXs {
+        width: 100%; /* Card width adjusts for smaller screens */
+        font-size: 14px; /* Smaller text size */
     }
 }
+
 
