@@ -26,14 +26,20 @@
 
   @media (max-width: 576px) {
     .xs {
+        padding: 4px;
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Two columns layout for small screens */
-        gap: 10px; /* Gap between the cards */
-        width: 100%; /* Ensure the grid takes the full width */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px; 
+        width: 100%;
+     
     }
     .cardXs {
-        width: 100%; /* Card width adjusts for smaller screens */
-        font-size: 14px; /* Smaller text size */
+        width: 100%; 
+        font-size: 5px; 
+    }
+    .button-xs {
+        padding: 6px 8px; 
+        font-size: 10px;   
     }
 }
 

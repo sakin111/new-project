@@ -52,7 +52,7 @@ const Section1 = () => {
                     </div>
                     <div className="flex flex-wrap items-center justify-between gap-6 text-sm md:text-base">
                         <Link to={`/card/${item._id}`}>
-                            <button className="rounded-lg bg-[#49B2FF] px-4 py-2 font-semibold text-white duration-300 hover:scale-105 hover:bg-sky-600">
+                            <button className="rounded-lg bg-[#49B2FF] px-4 py-2 font-semibold text-white duration-300 hover:scale-105 hover:bg-sky-600 button-xs">
                                 View Details
                             </button>
                         </Link>
