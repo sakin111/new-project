@@ -23,7 +23,7 @@ const Section1 = () => {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="my-20">
+        <div className="my-20 back-xs">
     <h1 className="text-3xl sm:text-4xl md:text-5xl text-gray-500 font-semibold p-3 text-center my-14 textColor1">
         পুষ্টিকর পোরিজ মিক্স
     </h1>

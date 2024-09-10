@@ -31,6 +31,7 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 10px; 
         width: 100%;
+      
      
     }
     .cardXs {
@@ -43,6 +44,9 @@
     }
     .text-xs-1{
         font-size: 8px;
+    }
+    .back-xs{
+        background-color: white;
     }
 }
 
