@@ -6,7 +6,7 @@ import axios from "axios";
 
 const axiosSecure = axios.create({
     // baseURL: 'http://localhost:5000'
-    baseURL:'https://new-project-server-hvl1awoyf-maliksakin53gmailcoms-projects.vercel.app/',
+    baseURL:'https://new-project-server-maliksakin53gmailcoms-projects.vercel.app/',
     withCredentials:true,
 });
 
