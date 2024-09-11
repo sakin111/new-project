@@ -28,14 +28,14 @@ const Section1 = () => {
         পুষ্টিকর পোরিজ মিক্স
     </h1>
 
-    {/* Adjusting the grid to accommodate 2 columns for small screens */}
+
     <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-4 lg:gap-32 mx-auto max-w-7xl cardXs xs sm:grid-col-2">
         {data.map((item, idx) => (
             <div key={idx}>
                 <div className="w-full max-w-[340px] space-y-3 rounded-xl bg-white p-4 shadow-lg dark:bg-[#18181B] md:w-[350px] sm:object-cover">
                     <div className="relative flex h-48 w-full justify-center lg:h-[260px]">
                         <div className="absolute left-4 right-4 top-4 flex items-center justify-between"></div>
-                        <img width={260} height={260} className="h-full w-full rounded-lg bg-black/40" src={item.imageFront} alt="card" />
+                        <img width={260} height={260} className="h-full w-full rounded-lg bg-black/40 xs-image" src={item.imageFront} alt="card" />
                     </div>
                     <div className="space-y-2 font-semibold">
                         <div className="flex justify-between items-start">

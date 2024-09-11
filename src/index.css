@@ -48,6 +48,10 @@
     .back-xs{
         background-color: white;
     }
+    .xs-image{
+        width: 150px;
+        height: 150px;
+    }
 }
 
 
