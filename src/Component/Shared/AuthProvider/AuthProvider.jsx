@@ -4,8 +4,7 @@ import { createContext, useEffect,  useState } from "react";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 import auth from "../../../../Firebase/Firebase.config";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
-// import { useQuery } from "@tanstack/react-query";
-// import useAxiosPublic from "../../Hook/useAxiosPublic";
+
 
 
 
@@ -20,7 +19,7 @@ const [user, setUser] = useState(null)
 const [loading, setLoading] = useState(true)
 const googleProvider = new GoogleAuthProvider()
 const {axiosSecure} = useAxiosSecure()
-// const axiosPublic = useAxiosPublic()
+
 
 
 const createUser = (email, password,name) => {
@@ -88,19 +87,6 @@ const logOut = async () => {
 
 
 
-// const { data = []} = useQuery({
-//     queryKey: ['card'],
-//     queryFn: async () => {
-//         try {
-//             const response = await axiosPublic.get('/card');
-//             return response.data;
-//         } catch (error) {
-//             console.error("Error fetching data:", error);
-//             throw error;
-//         }
-//     }
-// });
-
 
 
 
@@ -116,7 +102,6 @@ const authInfo = {
  
   
 }
-
 
 
 

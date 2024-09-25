@@ -1,18 +1,62 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import Section1TextAnimation from "../Section1/Section1Details/Section1TextAnimation"
 import Section1Span from "../Section1/Section1Details/Section1Span";
-import AddCartButton from "../Section1/Section1Details/AddCartButton";
+import Checkout from "../../../Shared/payment/Checkout";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../../Hook/useAxiosSecure";
+import AddCartButton from "../../../Shared/payment/AddCartButton";
+
 
 const Section1Details = () => {
+
+  const { axiosSecure } = useAxiosSecure()
+  const formRef = useRef(null)
+
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const count = form.count.value;
+    const imageFront = card.imageFront;
+    const price = selectedPrice;
+    const name = card.name;
+
+    const addInfo = { imageFront, count, price, name };
+    try {
+      const mongoResponse = axiosSecure.post("/addToCart", addInfo);
+      if (mongoResponse.data.insertedId) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Room created successfully',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        formRef.current.reset();
+      }
+    } catch (error) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'An error occurred',
+        text: error.message,
+        showConfirmButton: true,
+      });
+    }
+  };
+
+
+
   const card = useLoaderData();
   const [selectedPrice, setSelectedPrice] = useState(card.size[0]?.price || 0);
-  const [count, setCount] = useState(0);
+  const [number, setNumber] = useState(0);
 
   const handleSizeClick = (price) => setSelectedPrice(price);
-  const handleAdd = () => setCount((prev) => Math.min(prev + 1, 100));
-  const handleReduce = () => setCount((prev) => Math.max(prev - 1, 0));
+  const handleAdd = () => setNumber((prev) => Math.min(prev + 1, 100));
+  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 0));
 
+  console.log(selectedPrice)
   return (
     <div className="bg-white min-h-screen px-4">
       <div className="flex flex-col items-center justify-center gap-6 pt-6 lg:flex-row lg:items-start lg:justify-center lg:px-1 xl:px-24">
@@ -32,7 +76,8 @@ const Section1Details = () => {
         </div>
 
         {/* Details Section */}
-        <div className="min-w-[600px] rounded-br-lg rounded-tr-lg px-10 text-start md:w-[350px]">
+
+        <form onSubmit={handleForm} ref={formRef} className="min-w-[600px] rounded-br-lg rounded-tr-lg px-10 text-start md:w-[350px]">
           <div className="space-y-1">
             <h2 className="text-start text-3xl font-semibold font-custom font-banglaFont textColor1 lg:text-5xl">
               {card.name}
@@ -62,19 +107,24 @@ const Section1Details = () => {
             <div className="mt-6">
               <button className="mr-3 rounded-full border border-[#0d87f8] px-4 py-2 text-base text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white duration-300 dark:hover:bg-transparent dark:hover:text-[#0d87f8] dark:hover:drop-shadow-[0px_0px_2px_#0d87f8] font-medium">
                 <span onClick={handleAdd} className="text-lg">+</span>
-                <span className="mx-7">{count}</span>
+                <span className="mx-7">{number}</span>
                 <span onClick={handleReduce} className="text-lg">-</span>
               </button>
             </div>
           </div>
-          <div className="my-10  w-full">
-            <AddCartButton />
+          <div className="my-8 md:my-10 mx-auto w-full text-center lg:text-left md:text-left sm:text-left">
+
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-7 sm:flex-row sm:gap-6">
+              <AddCartButton selectedPrice={selectedPrice} number={number} imageFront={card.imageFront}></AddCartButton>
+              <Checkout selectedPrice={selectedPrice} number={number} imageFront={card.imageFront}></Checkout>
+            </div>
+
           </div>
           <div className="my-5">
             <h3 className="text-2xl mb-3 textColor1">পাওয়ার ফ্যাক্টসঃ</h3>
             <Section1TextAnimation card={card.description} />
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

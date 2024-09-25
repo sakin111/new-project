@@ -1,27 +1,56 @@
-// import { useContext } from "react";
-// import useAxiosPublic from "../../Hook/useAxiosPublic";
-// import { AuthContext } from "../AuthProvider/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import useAxiosSecure from "../../Hook/useAxiosSecure";
+import useUserStore from "../../Store/Store";
 
+const Checkout = ({ selectedPrice, number }) => {
+  
+  const { axiosSecure } = useAxiosSecure();
+  const navigate = useNavigate();
+  const { address, phoneNumber, postCode } = useUserStore();
 
-// const Checkout = () => {
-//     const axiosPublic = useAxiosPublic()
-//     const {data} = useContext(AuthContext)
+  // Debugging: Ensure you have correct values from Zustand store
+  console.log("Zustand State in Checkout:", { address, phoneNumber, postCode });
 
-// const handleCreatePayment = () =>{
-//     axiosPublic.post("/create-payment" paymentInfos={
-//         data.
-//     })
-// }
+  // Handle Payment Creation
+  const handleCreatePayment = async () => {
+    // Debugging line to check values before placing order
+    console.log("Placing Order with:", selectedPrice, number, address, phoneNumber, postCode);
 
+    if (!address) {
+      // If no address is found, navigate to the address form
+      navigate("/address");
+      return;
+    }
 
+    // Proceed with payment if address exists
+    const totalPrice = selectedPrice * number;
+    try {
+      const res = await axiosSecure.post("/create-payment", {
+        totalPrice,
+        number,
+        phoneNumber,
+        postCode,
+      });
 
+      console.log("Payment response:", res.data); // Debugging line to check payment response
+      return res.data;
+    } catch (error) {
+      console.error("Error creating payment:", error);
+    }
+  };
 
+  return (
+    <div>
+      <div>
+        <button
+          onClick={handleCreatePayment}
+          className="rounded-full bg-gradient-to-r from-cyan-400 to-cyan-400 px-4 py-2 text-xs sm:text-sm md:text-lg lg:text-lg inline-flex text-white duration-300 active:scale-95"
+        >
+          Place Order
+        </button>
+      </div>
+    </div>
+  );
+};
 
-//     return (
-//         <div>
-//             <h1>payment details</h1>
-//         </div>
-//     );
-// };
-
-// export default Checkout;
+export default Checkout;

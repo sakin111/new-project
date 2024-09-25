@@ -6,6 +6,7 @@ import useAuth from "../../Hook/useAuth";
 const Private = ({children}) => {
 
 const {user,loading} = useAuth()
+console.log(user)
 const location = useLocation();
 
 if(loading){
