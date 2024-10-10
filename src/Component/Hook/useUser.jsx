@@ -1,26 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "./useAxiosSecure";
+import useAxiosSecure from "./useAxiosSecure"; 
+import useAuth from "./useAuth"; // 
 
-const useUser = (email) => {
-    const { axiosSecure } = useAxiosSecure();
+const useUser = () => {
+    const { axiosSecure } = useAxiosSecure(); 
+    const { user } = useAuth(); 
 
-    const { data: user, isLoading, error, refetch } = useQuery({
-        queryKey: ["users", email],  // Keep email in queryKey for caching and refetching
+    // Fetch logged-in user data by email
+    const { refetch, data: userData = null, isLoading, isError, error } = useQuery({
+        queryKey: ['user', user?.email], 
         queryFn: async () => {
-            if (!email) return null; // Skip fetching if email is not provided
+            if (!user?.email) return null; 
+
             try {
-                const response = await axiosSecure.get(`/users/${email}`); // Corrected endpoint
-                console.log("Fetched user data:", response.data);
-                return response.data; // Assuming response.data contains the user object
+               
+                const res = await axiosSecure.get(`/users/email/${encodeURIComponent(user.email)}`);
+                return res.data; 
             } catch (error) {
-                console.error("Error fetching user data:", error);
-                throw error;
+                console.error("Error fetching user data:", error.message || error);
+                throw error; 
             }
         },
-        enabled: !!email, // Only fetch if email is defined
+        enabled: !!user?.email, 
     });
 
-    return { user, isLoading, error, refetch };
+    return [userData, refetch, isLoading, isError, error];
 };
 
 export default useUser;

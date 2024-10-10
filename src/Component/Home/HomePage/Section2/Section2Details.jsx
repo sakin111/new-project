@@ -1,60 +1,22 @@
-import { useRef, useState } from "react";
+import {  useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import Section1TextAnimation from "../Section1/Section1Details/Section1TextAnimation"
 import Section1Span from "../Section1/Section1Details/Section1Span";
 import Checkout from "../../../Shared/payment/Checkout";
-import Swal from "sweetalert2";
-import useAxiosSecure from "../../../Hook/useAxiosSecure";
 import AddCartButton from "../../../Shared/payment/AddCartButton";
+import useAuth from "../../../Hook/useAuth";
 
 
-const Section1Details = () => {
+const Section2Details = () => {
 
-  const { axiosSecure } = useAxiosSecure()
-  const formRef = useRef(null)
-
-
-  const handleForm = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const count = form.count.value;
-    const imageFront = card.imageFront;
-    const price = selectedPrice;
-    const name = card.name;
-
-    const addInfo = { imageFront, count, price, name };
-    try {
-      const mongoResponse = axiosSecure.post("/addToCart", addInfo);
-      if (mongoResponse.data.insertedId) {
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Room created successfully',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        formRef.current.reset();
-      }
-    } catch (error) {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'An error occurred',
-        text: error.message,
-        showConfirmButton: true,
-      });
-    }
-  };
-
-
-
+  const { user } = useAuth()
   const card = useLoaderData();
   const [selectedPrice, setSelectedPrice] = useState(card.size[0]?.price || 0);
   const [number, setNumber] = useState(0);
 
   const handleSizeClick = (price) => setSelectedPrice(price);
   const handleAdd = () => setNumber((prev) => Math.min(prev + 1, 100));
-  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 0));
+  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 1));
 
   console.log(selectedPrice)
   return (
@@ -77,7 +39,7 @@ const Section1Details = () => {
 
         {/* Details Section */}
 
-        <form onSubmit={handleForm} ref={formRef} className="min-w-[600px] rounded-br-lg rounded-tr-lg px-10 text-start md:w-[350px]">
+        <div className="min-w-[600px] rounded-br-lg rounded-tr-lg px-10 text-start md:w-[350px]">
           <div className="space-y-1">
             <h2 className="text-start text-3xl font-semibold font-custom font-banglaFont textColor1 lg:text-5xl">
               {card.name}
@@ -115,8 +77,8 @@ const Section1Details = () => {
           <div className="my-8 md:my-10 mx-auto w-full text-center lg:text-left md:text-left sm:text-left">
 
             <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-7 sm:flex-row sm:gap-6">
-              <AddCartButton selectedPrice={selectedPrice} number={number} imageFront={card.imageFront}></AddCartButton>
-              <Checkout selectedPrice={selectedPrice} number={number} imageFront={card.imageFront}></Checkout>
+              <AddCartButton selectedPrice={selectedPrice} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} email={user.email}></AddCartButton>
+              <Checkout selectedPrice={selectedPrice} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} ></Checkout>
             </div>
 
           </div>
@@ -124,10 +86,10 @@ const Section1Details = () => {
             <h3 className="text-2xl mb-3 textColor1">পাওয়ার ফ্যাক্টসঃ</h3>
             <Section1TextAnimation card={card.description} />
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Section1Details;
+export default Section2Details;

@@ -11,7 +11,8 @@ import CardOption from "./Component/Shared/CardOption/CardOption";
 import AdminRoute from "./Component/Shared/Secure/AdminRoute";
 import Users from "./Component/Shared/Dashboard/Users";
 import Private from "./Component/Shared/Secure/Private";
-import Address from "./Component/Shared/payment/Address";
+import EditAddress from "./Component/Shared/payment/MakeAddress/EditAddress";
+
 
 
 
@@ -48,13 +49,13 @@ const router = createBrowserRouter([
             {
                 path: "/card/:id",
                 element: <Section1Details></Section1Details>,
-                loader: ({ params }) => fetch(`http://localhost:5000/card/${params.id}`)
+                loader: ({ params }) => fetch(`https://new-project-server-maliksakin53gmailcoms-projects.vercel.app/card/${params.id}`)
             },
            
             {
                 path: "/cardMix/:id",
                 element: <Section2Details></Section2Details>,
-                loader: ({ params }) => fetch(`http://localhost:5000/cardMix/${params.id}`)
+                loader: ({ params }) => fetch(`https://new-project-server-maliksakin53gmailcoms-projects.vercel.app/cardMix/${params.id}`)
             },
             {
                 path: "/cart",
@@ -63,10 +64,11 @@ const router = createBrowserRouter([
             },
             
             {
-                path: "/address",
-                element: <Address></Address>,
+                path: "/editForm",
+                element: <EditAddress></EditAddress>,
              
             },
+            
             
            
          
