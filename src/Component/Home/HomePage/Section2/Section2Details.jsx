@@ -16,7 +16,7 @@ const Section2Details = () => {
 
   const handleSizeClick = (price) => setSelectedPrice(price);
   const handleAdd = () => setNumber((prev) => Math.min(prev + 1, 100));
-  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 1));
+  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 0));
 
   console.log(selectedPrice)
   return (

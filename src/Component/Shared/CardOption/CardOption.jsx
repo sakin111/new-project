@@ -5,16 +5,12 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const CardOption = () => {
-  const { cartData, error, isLoading, refetch } = useCart();
+  
   const { axiosSecure } = useAxiosSecure();
+ const  [cartData, refetch, error, isLoading] = useCart();
 
-  if (isLoading) {
-    return <p>Loading cart data...</p>;
-  }
 
-  if (error) {
-    return <p>Error fetching cart data: {error.message}</p>;
-  }
+
 
   const handleDeleteCart = (cart) => {
     Swal.fire({
@@ -55,6 +51,15 @@ const CardOption = () => {
       }
     });
   };
+
+
+  if (isLoading) {
+    return <p>Loading cart data...</p>;
+  }
+
+  if (error) {
+    return <p>Error fetching cart data: {error.message}</p>;
+  }
 
   return (
     <div className="overflow-x-hidden min-h-screen bg-white">

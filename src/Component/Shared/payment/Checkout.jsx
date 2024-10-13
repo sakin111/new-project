@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
@@ -34,13 +34,11 @@ const Checkout = ({ selectedPrice, number,productName, productCategory }) => {
     enabled: !!user?.email, // Only run the query if user.email exists
   });
 
-  useEffect(() => {
-    console.log("User Data in Checkout:", userData);
-  }, [userData]);
+
 
   // Handle Payment Creation
   const handleCreatePayment = async () => {
-    console.log("Attempting to create payment with userData:", userData);
+  
 
     if (isLoading) {
       alert("Loading user data, please wait...");

@@ -1,175 +1,205 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hook/useAxiosSecure"; // Adjust the path as necessary
 import useUser from "../../../Hook/useUser"; // Adjust the path as necessary
+import useCart from "../../../Hook/useCart";
+import { useNavigate } from "react-router-dom";
 
 const EditAddress = () => {
   const { axiosSecure } = useAxiosSecure();
-  const [userData, refetch, isLoading, isError, error] = useUser();
+  const { userData, refetch, isLoading, isError, error } = useUser();
+  const [cartData] = useCart();
+  const navigate = useNavigate()
 
-  // Existing state variables
-  const [localAddress, setLocalAddress] = useState("");
-  const [localPhoneNumber, setLocalPhoneNumber] = useState("");
-  const [localPostCode, setLocalPostCode] = useState("");
+  const [formData, setFormData] = useState({
+    address: "",
+    postCode: "",
+    phoneNumber: "",
+    paymentMethod: "Cash on Delivery",
+    shippingZone: "50",
+  });
+  const isFormInitialize = useRef(false)
 
-  // New state variables for checkout
-  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
-  const [shippingZone, setShippingZone] = useState("Zone 1");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleMakeAddress = (e) => {
-    e.preventDefault();
-
+  const checkUser = () => {
     if (!userData?.email) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No user found!",
+        text: "No user found! Please log in.",
       });
-      return;
+      return false;
     }
-
-// add delivery info to the add to cart
-
-
-
-
-
-
-    // You might want to add validation for new fields here
-    axiosSecure
-      .patch(`/users/${userData.email}`, {
-        address: localAddress,
-        phone: localPhoneNumber,
-        postCode: localPostCode,
-        method:paymentMethod, 
-        Zone:shippingZone,  
-      })
-      .then((res) => {
-        if (res.data.modifiedCount > 0) {
-          refetch();
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: `Address and checkout details updated successfully!`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          Swal.fire({
-            icon: "info",
-            title: "No Changes",
-            text: "No updates were made.",
-          });
-        }
-      })
-      .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          title: "Failed to update details",
-          text: err.message || "Something went wrong!",
-        });
-      });
+    return true;
   };
 
-  if (isLoading) return <p>Loading user data...</p>;
-  if (isError) return <p>Error loading user data: {error.message}</p>;
+  useEffect(() => {
+    if (userData && !isFormInitialize.current) {
+      setFormData((prevData) => ({
+        ...prevData,
+        address: userData.address || "",
+        postCode: userData.postCode || "",
+        phoneNumber: userData.phone || "",
+      }));
+      isFormInitialize.current = true
+    }
+  }, [userData]); // Dependency on userData only
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!checkUser()) return;
+
+    setIsSubmitting(true);
+
+  // all updating field 
+
+    const updatedFields = {
+      address: formData.address,
+      postCode: formData.postCode, 
+      phoneNumber: formData.phoneNumber,
+    };
+
+    const checkoutData = {
+      ...updatedFields,
+      paymentMethod: formData.paymentMethod,
+      shippingZone: formData.shippingZone,
+    };
+
+    const myOrder = {
+      email: userData.email,
+      products: cartData.map(item => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+        category: item.category,
+      })),
+      address: formData.address,
+      postCode: formData.postCode,
+      phone: formData.phoneNumber,
+      method: formData.paymentMethod,
+      Zone: formData.shippingZone,
+    };
+
+//  send all data to the server
+
+    try {
+      const updateRes = await axiosSecure.patch(`/users/${userData.email}`, updatedFields);
+
+      if (updateRes.data.modifiedCount > 0) {
+        refetch();
+      }
+
+      const checkoutRes = await axiosSecure.patch(`/addToCart/${userData.email}`, checkoutData);
+
+      if (checkoutRes.data.success) {
+        refetch();
+      }
+
+      const orderRes = await axiosSecure.post("/myOrder", myOrder);
+
+      if (orderRes.data.success) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `Order placed successfully!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        refetch();
+        navigate("/")
+      } else {
+        Swal.fire({
+          icon: "info",
+          title: "Order Info",
+          text: orderRes.data.message || "Order could not be completed.",
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Operation Failed",
+        text: err.response?.data?.message || "Something went wrong!",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
+
+  if (isLoading) return <div className="flex items-center justify-center h-screen bg-gray-100"><div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div></div>;
+
+  if (isError) return <div className="flex items-center justify-center h-screen bg-gray-100"><p className="text-center text-red-500">Error loading user data: {error.message}</p></div>;
 
   return (
-  <div className="bg-white min-h-screen overflow-hidden">
-      <div className="edit-address-form max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-8">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Checkout</h2>
-      <form onSubmit={handleMakeAddress} className="form">
-        {/* Address Field */}
-        <div className="form-group mb-4">
-          <label htmlFor="address" className="block text-gray-600 mb-2">Address:</label>
-          <input
-            id="address"
-            type="text"
-            value={localAddress}
-            onChange={(e) => setLocalAddress(e.target.value)}
-            placeholder="Enter your address"
-            required
-            className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+    <div className="bg-white min-h-screen flex items-center justify-center p-4">
+      <div className="edit-address-form max-w-4xl w-full bg-white shadow-2xl rounded-3xl p-10">
+        <h2 className="text-4xl font-bold mb-8 text-center text-gray-800">Checkout</h2>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {userData.address ? (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h3 className="text-2xl font-semibold text-green-700 mb-4">Saved Contact Information</h3>
+              <div className="space-y-2">
+                <p className="text-gray-700"><span className="font-medium font-Roboto text-slate-900">Address:</span> {userData.address}</p>
+                <p className="text-gray-700"><span className="font-medium font-Roboto text-slate-900">Post Code:</span> {userData.postCode}</p>
+                <p className="text-gray-700"><span className="font-medium font-Roboto text-slate-900">Phone Number:</span> {userData.phone}</p>
+              </div>
+            </div>
+          ) : (
+            <section className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <h3 className="text-2xl font-semibold mb-6 text-gray-800">Contact Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="form-group">
+                  <label htmlFor="address" className="block text-gray-600 mb-2">Address:</label>
+                  <input id="address" type="text" value={formData.address} onChange={handleChange} placeholder="Enter your address" required className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="postCode" className="block text-gray-600 mb-2">Post Code:</label>
+                  <input id="postCode" type="text" value={formData.postCode} onChange={handleChange} placeholder="Enter your post code" required className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300" />
+                </div>
+                <div className="form-group md:col-span-2">
+                  <label htmlFor="phoneNumber" className="block text-gray-600 mb-2">Phone Number:</label>
+                  <input id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} placeholder="Enter your phone number" required pattern="[0-9]{11}" title="Enter a valid 11-digit phone number" className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300" />
+                </div>
+              </div>
+            </section>
+          )}
 
-        {/* Phone Number Field */}
-        <div className="form-group mb-4">
-          <label htmlFor="phoneNumber" className="block text-gray-600 mb-2">Phone Number:</label>
-          <input
-            id="phoneNumber"
-            type="tel"
-            value={localPhoneNumber}
-            onChange={(e) => setLocalPhoneNumber(e.target.value)}
-            placeholder="Enter your phone number"
-            required
-            pattern="[0-9]{10}" // Example pattern for 10-digit numbers
-            title="Enter a valid 10-digit phone number"
-            className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+          <section className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <h3 className="text-2xl font-semibold mb-6 text-gray-800">Delivery Options</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="form-group">
+                <label htmlFor="paymentMethod" className="block text-gray-600 mb-2">Payment Method:</label>
+                <select id="paymentMethod" value={formData.paymentMethod} onChange={handleChange} className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                  <option value="Cash on Delivery">Cash on Delivery</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="shippingZone" className="block text-gray-600 mb-2">Shipping Zone:</label>
+                <select id="shippingZone" value={formData.shippingZone} onChange={handleChange} className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                  <option value="50">Inside Bangladesh - (Delivery within 2-3 days charge - 50TK)</option>
+                  <option value="80">Inside Bangladesh - (Delivery within 48 hours charge - 80TK)</option>
+                  <option value="100">Outside of Bangladesh - (Delivery within 7-14 days charge - 100TK)</option>
+                </select>
+              </div>
+            </div>
+          </section>
 
-        {/* Post Code Field */}
-        <div className="form-group mb-4">
-          <label htmlFor="postCode" className="block text-gray-600 mb-2">Post Code:</label>
-          <input
-            id="postCode"
-            type="text"
-            value={localPostCode}
-            onChange={(e) => setLocalPostCode(e.target.value)}
-            placeholder="Enter your post code"
-            required
-            className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-
-        {/* Payment Method Selection */}
-        <div className="form-group mb-4">
-          <label htmlFor="paymentMethod" className="block text-gray-600 mb-2">Payment Method:</label>
-          <select
-            id="paymentMethod"
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-            required
-            className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="Cash on Delivery">Cash on Delivery</option>
-            <option value="Credit Card">Credit Card</option>
-            <option value="PayPal">PayPal</option>
-            {/* Add more payment methods as needed */}
-          </select>
-        </div>
-
-        {/* Shipping Zone Selection */}
-        <div className="form-group mb-6">
-          <label htmlFor="shippingZone" className="block text-gray-600 mb-2">Shipping Zone:</label>
-          <select
-            id="shippingZone"
-            value={shippingZone}
-            onChange={(e) => setShippingZone(e.target.value)}
-            required
-            className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="50">Dhaka - (Delivery within 24 hours charge - 50TK)</option>
-            <option value="80"> Out Side of Dhaka -  (Delivery within 3-5 days charge - 80TK)</option>
-          </select>
-        </div>
-
-        {/* Submit Button */}
-        <div className="form-actions">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-2 rounded-lg text-white font-semibold transition duration-300 ease-in-out ${
-              isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            {isLoading ? "Submitting..." : "Proceed to Checkout"}
+          <button type="submit" disabled={isSubmitting} className={`w-full p-4 rounded-lg font-semibold text-white ${isSubmitting ? 'bg-gray-400' : 'bg-teal-600 hover:bg-cyan-500'}`}>
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
   );
 };
 

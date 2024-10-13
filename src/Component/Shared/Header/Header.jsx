@@ -8,7 +8,7 @@ import { CiShoppingCart } from "react-icons/ci";
 const Header = () => {
   const [showNav, setShowNav] = useState(true);
   const [isBadgeVisible, setIsBadgeVisible] = useState(true); // Control badge visibility
-  const { cartData } = useCart(); // Get cart data from hook
+  const  [cartData]  = useCart(); // Get cart data from hook
 
   const handleSearchIconClick = (isSearchVisible) => {
     setShowNav(!isSearchVisible);
