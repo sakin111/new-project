@@ -3,18 +3,17 @@ import useAxiosSecure from "./useAxiosSecure";
 import useAuth from "./useAuth";
 
 const useCart = () => {
-    const { user } = useAuth();
+    const { user, isLoading: isAuthLoading } = useAuth();
     const { axiosSecure } = useAxiosSecure();
 
     const { data, error, isLoading, refetch } = useQuery({
-        queryKey: ["cartData"],
+        queryKey: ["cartData", user?.email],
         queryFn: async () => {
             if (!user?.email) {
                 throw new Error("User email is missing");
             }
             try {
-                const res = await axiosSecure.get("/addToCart");
-               
+                const res = await axiosSecure.get(`/addToCart/${encodeURIComponent(user.email)}`);
                 if (Array.isArray(res.data)) {
                     return res.data;
                 } else if (res.data) {
@@ -33,14 +32,14 @@ const useCart = () => {
                 }
             }
         },
-        enabled: !!user?.email,
+        enabled: !!user?.email && !isAuthLoading, // Ensure query runs only when user is logged in
         refetchInterval: 300000, // 5 minutes
     });
 
     const cartData = data ?? [];
     console.log(cartData, "this is cartData hook");
 
-    return [ cartData, refetch, error, isLoading] ;
+    return [cartData, error, isLoading, refetch];
 };
 
 export default useCart;

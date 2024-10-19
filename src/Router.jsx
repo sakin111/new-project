@@ -12,6 +12,7 @@ import AdminRoute from "./Component/Shared/Secure/AdminRoute";
 import Users from "./Component/Shared/Dashboard/Users";
 import Private from "./Component/Shared/Secure/Private";
 import EditAddress from "./Component/Shared/payment/MakeAddress/EditAddress";
+import AllCart from "./Component/Shared/Dashboard/AllCart";
 
 
 
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
             },
             
             {
-                path: "/editForm",
+                path: "/addToCart/:id",
                 element: <EditAddress></EditAddress>,
              
             },
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard/users',
                 element:<AdminRoute><Users></Users></AdminRoute>
+            },
+            {
+                path: '/dashboard/allCart',
+                element:<AdminRoute><AllCart></AllCart></AdminRoute>
             },
            
 

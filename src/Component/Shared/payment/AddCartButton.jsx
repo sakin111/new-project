@@ -3,46 +3,46 @@ import useAxiosSecure from "../../Hook/useAxiosSecure";
 
 
 
-const AddCartButton = ({ selectedPrice, number , imageFront,productCategory,productName , email}) => {
+const AddCartButton = ({ selectedPrice, number , imageFront,productCategory,productName ,email}) => {
 
   const { axiosSecure } = useAxiosSecure()
 
  
   const handleAddToCart = async () => {
+    console.log(selectedPrice, number, imageFront, productCategory, productName);
 
+    const addInfo = {
+        price: selectedPrice,
+        quantity: number,
+        image: imageFront,
+        category: productCategory,
+        name: productName,
+        email: email,
+    };
 
-      console.log(selectedPrice, number,imageFront,productCategory,productName)
-
-        const addInfo = { 
-          price: selectedPrice ,
-          quantity:number,
-          image:imageFront,
-          category:productCategory,
-          name:productName ,
-          email:email
-         };
-        try {
-          const response = await axiosSecure.post("/addToCart", addInfo);
-          if (response.data.insertedId) {
+    try {
+        const response = await axiosSecure.post("/addToCart", addInfo);
+        if (response.data.insertedId) {
             Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'cart added successfully',
-              showConfirmButton: false,
-              timer: 1500,
+                position: 'center',
+                icon: 'success',
+                title: 'Cart added successfully',
+                showConfirmButton: false,
+                timer: 1500,
             });
-
-          }
-        } catch (error) {
-          Swal.fire({
+        }
+    } catch (error) {
+        console.error("Error adding to cart:", error); // Log the error
+        Swal.fire({
             position: 'center',
             icon: 'error',
             title: 'An error occurred',
-            text: error.message || "Something went wrong. Please try again later.",
+            text: error.response?.data?.message || "Something went wrong. Please try again later.",
             showConfirmButton: true,
-          });
-        }
-      };
+        });
+    }
+};
+
 
 
 

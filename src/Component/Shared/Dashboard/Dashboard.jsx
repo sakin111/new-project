@@ -2,7 +2,7 @@ import { FaAd, FaBook, FaCalendar, FaEnvelope, FaHome, FaList, FaUsers } from "r
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../../Hook/useAdmin";
-
+import { BsCart3 } from "react-icons/bs";
 
 
 
@@ -36,9 +36,9 @@ if(isAdminLoading){
                               Add Items</NavLink>
                       </li>
                       <li>
-                          <NavLink to="/dashboard/manageItems">
-                              <FaList></FaList>
-                              Manage Items</NavLink>
+                          <NavLink to="/dashboard/allCart">
+                          <BsCart3 />
+                             All Cart</NavLink>
                       </li>
                       <li>
                           <NavLink to="/dashboard/bookings">

@@ -2,14 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hook/useAxiosSecure"; // Adjust the path as necessary
 import useUser from "../../../Hook/useUser"; // Adjust the path as necessary
-import useCart from "../../../Hook/useCart";
 import { useNavigate } from "react-router-dom";
+import useSingle from "../../../Hook/useSingle";
+
+
 
 const EditAddress = () => {
   const { axiosSecure } = useAxiosSecure();
   const { userData, refetch, isLoading, isError, error } = useUser();
-  const [cartData] = useCart();
-  const navigate = useNavigate()
+  const [cartItem,isCartLoading] = useSingle()
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     address: "",
@@ -18,9 +20,11 @@ const EditAddress = () => {
     paymentMethod: "Cash on Delivery",
     shippingZone: "50",
   });
-  const isFormInitialize = useRef(false)
 
+  const isFormInitialize = useRef(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+
 
   const checkUser = () => {
     if (!userData?.email) {
@@ -34,6 +38,7 @@ const EditAddress = () => {
     return true;
   };
 
+  // Initialize form with user data if available
   useEffect(() => {
     if (userData && !isFormInitialize.current) {
       setFormData((prevData) => ({
@@ -42,9 +47,9 @@ const EditAddress = () => {
         postCode: userData.postCode || "",
         phoneNumber: userData.phone || "",
       }));
-      isFormInitialize.current = true
+      isFormInitialize.current = true;
     }
-  }, [userData]); // Dependency on userData only
+  }, [userData]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -54,67 +59,56 @@ const EditAddress = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!checkUser()) return;
+    if (!checkUser() || !cartItem) return;
 
     setIsSubmitting(true);
 
-  // all updating field 
-
-    const updatedFields = {
-      address: formData.address,
-      postCode: formData.postCode, 
-      phoneNumber: formData.phoneNumber,
-    };
-
-    const checkoutData = {
-      ...updatedFields,
-      paymentMethod: formData.paymentMethod,
-      shippingZone: formData.shippingZone,
-    };
+    const product = cartItem;
 
     const myOrder = {
-      email: userData.email,
-      products: cartData.map(item => ({
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        image: item.image,
-        category: item.category,
-      })),
-      address: formData.address,
-      postCode: formData.postCode,
-      phone: formData.phoneNumber,
-      method: formData.paymentMethod,
-      Zone: formData.shippingZone,
-    };
-
-//  send all data to the server
+      userEmail: userData.email, // User email
+      products:{
+        id: product._id,
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity,
+        image: product.image,
+        category: product.category,
+      },
+     
+      // Handle case where cartItem might be null or empty
+      address: formData.address, // User input from the form
+      postCode: formData.postCode, // User input from the form
+      phone: formData.phoneNumber, // User input from the form
+      method: formData.paymentMethod, // User input from the form
+      zone: formData.shippingZone, 
+      date: new Date() // User input from the form
+     
+    }
+    console.log(myOrder, "this is myOrder object")
 
     try {
-      const updateRes = await axiosSecure.patch(`/users/${userData.email}`, updatedFields);
+      const updateRes = await axiosSecure.patch(`/users/${userData.email}`, {
+        address: formData.address,
+        postCode: formData.postCode,
+        phoneNumber: formData.phoneNumber,
+      });
 
       if (updateRes.data.modifiedCount > 0) {
         refetch();
       }
 
-      const checkoutRes = await axiosSecure.patch(`/addToCart/${userData.email}`, checkoutData);
-
-      if (checkoutRes.data.success) {
-        refetch();
-      }
-
       const orderRes = await axiosSecure.post("/myOrder", myOrder);
-
       if (orderRes.data.success) {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: `Order placed successfully!`,
+          title: "Order placed successfully!",
           showConfirmButton: false,
           timer: 1500,
         });
         refetch();
-        navigate("/")
+        navigate("/");
       } else {
         Swal.fire({
           icon: "info",
@@ -133,11 +127,25 @@ const EditAddress = () => {
     }
   };
 
+  if (isLoading || isCartLoading)
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <p className="text-center text-red-500">
+          Error loading user data: {error.message}
+        </p>
+      </div>
+    );
+
+console.log(cartItem,"this is cartItem")
 
 
-  if (isLoading) return <div className="flex items-center justify-center h-screen bg-gray-100"><div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div></div>;
-
-  if (isError) return <div className="flex items-center justify-center h-screen bg-gray-100"><p className="text-center text-red-500">Error loading user data: {error.message}</p></div>;
 
   return (
     <div className="bg-white min-h-screen flex items-center justify-center p-4">
@@ -148,9 +156,9 @@ const EditAddress = () => {
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
               <h3 className="text-2xl font-semibold text-green-700 mb-4">Saved Contact Information</h3>
               <div className="space-y-2">
-                <p className="text-gray-700"><span className="font-medium font-Roboto text-slate-900">Address:</span> {userData.address}</p>
-                <p className="text-gray-700"><span className="font-medium font-Roboto text-slate-900">Post Code:</span> {userData.postCode}</p>
-                <p className="text-gray-700"><span className="font-medium font-Roboto text-slate-900">Phone Number:</span> {userData.phone}</p>
+                <p className="text-gray-700"><span className="font-medium">Address:</span> {userData.address}</p>
+                <p className="text-gray-700"><span className="font-medium">Post Code:</span> {userData.postCode}</p>
+                <p className="text-gray-700"><span className="font-medium">Phone Number:</span> {userData.phone}</p>
               </div>
             </div>
           ) : (
@@ -159,15 +167,41 @@ const EditAddress = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="form-group">
                   <label htmlFor="address" className="block text-gray-600 mb-2">Address:</label>
-                  <input id="address" type="text" value={formData.address} onChange={handleChange} placeholder="Enter your address" required className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300" />
+                  <input
+                    id="address"
+                    type="text"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="Enter your address"
+                    required
+                    className="border border-gray-300 rounded-lg p-4 w-full"
+                  />
                 </div>
                 <div className="form-group">
                   <label htmlFor="postCode" className="block text-gray-600 mb-2">Post Code:</label>
-                  <input id="postCode" type="text" value={formData.postCode} onChange={handleChange} placeholder="Enter your post code" required className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300" />
+                  <input
+                    id="postCode"
+                    type="text"
+                    value={formData.postCode}
+                    onChange={handleChange}
+                    placeholder="Enter your post code"
+                    required
+                    className="border border-gray-300 rounded-lg p-4 w-full"
+                  />
                 </div>
                 <div className="form-group md:col-span-2">
                   <label htmlFor="phoneNumber" className="block text-gray-600 mb-2">Phone Number:</label>
-                  <input id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} placeholder="Enter your phone number" required pattern="[0-9]{11}" title="Enter a valid 11-digit phone number" className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300" />
+                  <input
+                    id="phoneNumber"
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    placeholder="Enter your phone number"
+                    required
+                    pattern="[0-9]{11}"
+                    title="Enter a valid 11-digit phone number"
+                    className="border border-gray-300 rounded-lg p-4 w-full"
+                  />
                 </div>
               </div>
             </section>
@@ -178,14 +212,24 @@ const EditAddress = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-group">
                 <label htmlFor="paymentMethod" className="block text-gray-600 mb-2">Payment Method:</label>
-                <select id="paymentMethod" value={formData.paymentMethod} onChange={handleChange} className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                <select
+                  id="paymentMethod"
+                  value={formData.paymentMethod}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg p-4 w-full"
+                >
                   <option value="Cash on Delivery">Cash on Delivery</option>
                   <option value="Bank Transfer">Bank Transfer</option>
                 </select>
               </div>
               <div className="form-group">
                 <label htmlFor="shippingZone" className="block text-gray-600 mb-2">Shipping Zone:</label>
-                <select id="shippingZone" value={formData.shippingZone} onChange={handleChange} className="border border-gray-300 rounded-lg p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                <select
+                  id="shippingZone"
+                  value={formData.shippingZone}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg p-4 w-full"
+                >
                   <option value="50">Inside Bangladesh - (Delivery within 2-3 days charge - 50TK)</option>
                   <option value="80">Inside Bangladesh - (Delivery within 48 hours charge - 80TK)</option>
                   <option value="100">Outside of Bangladesh - (Delivery within 7-14 days charge - 100TK)</option>
@@ -194,8 +238,12 @@ const EditAddress = () => {
             </div>
           </section>
 
-          <button type="submit" disabled={isSubmitting} className={`w-full p-4 rounded-lg font-semibold text-white ${isSubmitting ? 'bg-gray-400' : 'bg-teal-600 hover:bg-cyan-500'}`}>
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full p-4 rounded-lg font-semibold text-white ${isSubmitting ? "bg-gray-400" : "bg-teal-600 hover:bg-cyan-500"}`}
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
