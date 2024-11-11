@@ -1,4 +1,4 @@
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsCart2, BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircleUser, FaOrcid } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
@@ -88,6 +88,14 @@ const Header1 = () => {
                   <Link to="/Dashboard" className="flex justify-start items-center gap-3">
                     <motion.div ><LuLayoutDashboard /></motion.div>
                     <motion.div >  Dashboard</motion.div>
+                  </Link>
+                </motion.li>
+
+
+                <motion.li variants={itemVariants} >
+                  <Link to="/myCart" className="flex justify-start items-center gap-3">
+                    <motion.div ><BsCart2></BsCart2></motion.div>
+                    <motion.div >My cart</motion.div>
                   </Link>
                 </motion.li>
 

@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
-import useAxiosSecure from "../../../Hook/useAxiosSecure"; // Adjust the path as necessary
-import useUser from "../../../Hook/useUser"; // Adjust the path as necessary
+import useAxiosSecure from "../../../Hook/useAxiosSecure";
+import useUser from "../../../Hook/useUser";
 import { useNavigate } from "react-router-dom";
 import useSingle from "../../../Hook/useSingle";
-
-
+import useCookiesData from "../../../Hook/useCookiesData";
 
 const EditAddress = () => {
   const { axiosSecure } = useAxiosSecure();
   const { userData, refetch, isLoading, isError, error } = useUser();
-  const [cartItem,isCartLoading] = useSingle()
+  const [cartItem, isCartLoading] = useSingle();
+  const { cartCookies } = useCookiesData();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -24,8 +24,6 @@ const EditAddress = () => {
   const isFormInitialize = useRef(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-
   const checkUser = () => {
     if (!userData?.email) {
       Swal.fire({
@@ -38,7 +36,6 @@ const EditAddress = () => {
     return true;
   };
 
-  // Initialize form with user data if available
   useEffect(() => {
     if (userData && !isFormInitialize.current) {
       setFormData((prevData) => ({
@@ -59,33 +56,51 @@ const EditAddress = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!checkUser() || !cartItem) return;
+    if (!checkUser() || !cartItem || !cartCookies) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Missing cart or cookie data.",
+      });
+      return;
+    }
 
     setIsSubmitting(true);
 
-    const product = cartItem;
+    const cookiesItem = {
+      products: {
+        id: cartCookies._id,
+        name: cartCookies.name,
+        price: cartCookies.price,
+        quantity: cartCookies.quantity,
+        image: cartCookies.image,
+        category: cartCookies.category,
+      },
+      address: formData.address,
+      postCode: formData.postCode,
+      phone: formData.phoneNumber,
+      method: formData.paymentMethod,
+      zone: formData.shippingZone,
+      date: new Date(),
+    };
 
     const myOrder = {
-      userEmail: userData.email, // User email
-      products:{
-        id: product._id,
-        name: product.name,
-        price: product.price,
-        quantity: product.quantity,
-        image: product.image,
-        category: product.category,
+      userEmail: userData.email,
+      products: {
+        id: cartItem._id,
+        name: cartItem.name,
+        price: cartItem.price,
+        quantity: cartItem.quantity,
+        image: cartItem.image,
+        category: cartItem.category,
       },
-     
-      // Handle case where cartItem might be null or empty
-      address: formData.address, // User input from the form
-      postCode: formData.postCode, // User input from the form
-      phone: formData.phoneNumber, // User input from the form
-      method: formData.paymentMethod, // User input from the form
-      zone: formData.shippingZone, 
-      date: new Date() // User input from the form
-     
-    }
-    console.log(myOrder, "this is myOrder object")
+      address: formData.address,
+      postCode: formData.postCode,
+      phone: formData.phoneNumber,
+      method: formData.paymentMethod,
+      zone: formData.shippingZone,
+      date: new Date(),
+    };
 
     try {
       const updateRes = await axiosSecure.patch(`/users/${userData.email}`, {
@@ -98,8 +113,10 @@ const EditAddress = () => {
         refetch();
       }
 
-      const orderRes = await axiosSecure.post("/myOrder", myOrder);
-      if (orderRes.data.success) {
+      const cookiesOrderRes = await axiosSecure.post("/OrderCookies", cookiesItem);
+      const myOrderRes = await axiosSecure.post("/myOrder", myOrder);
+
+      if (cookiesOrderRes.data.success && myOrderRes.data.success) {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -113,7 +130,7 @@ const EditAddress = () => {
         Swal.fire({
           icon: "info",
           title: "Order Info",
-          text: orderRes.data.message || "Order could not be completed.",
+          text: cookiesOrderRes.data.message || "Order could not be completed.",
         });
       }
     } catch (err) {
@@ -127,25 +144,21 @@ const EditAddress = () => {
     }
   };
 
-  if (isLoading || isCartLoading)
+  if (isLoading || isCartLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
         <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
       </div>
     );
+  }
 
-  if (isError)
+  if (isError) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
-        <p className="text-center text-red-500">
-          Error loading user data: {error.message}
-        </p>
+        <p className="text-center text-red-500">Error loading user data: {error.message}</p>
       </div>
     );
-
-console.log(cartItem,"this is cartItem")
-
-
+  }
 
   return (
     <div className="bg-white min-h-screen flex items-center justify-center p-4">
@@ -156,9 +169,15 @@ console.log(cartItem,"this is cartItem")
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
               <h3 className="text-2xl font-semibold text-green-700 mb-4">Saved Contact Information</h3>
               <div className="space-y-2">
-                <p className="text-gray-700"><span className="font-medium">Address:</span> {userData.address}</p>
-                <p className="text-gray-700"><span className="font-medium">Post Code:</span> {userData.postCode}</p>
-                <p className="text-gray-700"><span className="font-medium">Phone Number:</span> {userData.phone}</p>
+                <p className="text-gray-700">
+                  <span className="font-medium">Address:</span> {userData.address}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium">Post Code:</span> {userData.postCode}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium">Phone Number:</span> {userData.phone}
+                </p>
               </div>
             </div>
           ) : (

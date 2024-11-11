@@ -13,6 +13,7 @@ import Users from "./Component/Shared/Dashboard/Users";
 import Private from "./Component/Shared/Secure/Private";
 import EditAddress from "./Component/Shared/payment/MakeAddress/EditAddress";
 import AllCart from "./Component/Shared/Dashboard/AllCart";
+import MyCart from "./Component/Shared/Dashboard/MyCart";
 
 
 
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
                 element: <EditAddress></EditAddress>,
              
             },
+            {
+                path: '/myCart',
+                element:<MyCart></MyCart>
+            },
             
             
            
@@ -94,6 +99,10 @@ const router = createBrowserRouter([
                 path: '/dashboard/allCart',
                 element:<AdminRoute><AllCart></AllCart></AdminRoute>
             },
+            // {
+            //     path: '/dashboard/myCart',
+            //     element:<MyCart></MyCart>
+            // },
            
 
         ]

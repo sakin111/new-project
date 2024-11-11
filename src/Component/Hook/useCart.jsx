@@ -3,7 +3,7 @@ import useAxiosSecure from "./useAxiosSecure";
 import useAuth from "./useAuth";
 
 const useCart = () => {
-    const { user, isLoading: isAuthLoading } = useAuth();
+    const { user, isLoading: isAuthLoading } = useAuth()  || {};
     const { axiosSecure } = useAxiosSecure();
 
     const { data, error, isLoading, refetch } = useQuery({

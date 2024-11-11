@@ -2,23 +2,37 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import useCart from "../../Hook/useCart";
 import { RiDeleteBinLine } from "react-icons/ri";
-import {  useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import useCookiesData from "../../Hook/useCookiesData";
+import useAuth from "../../Hook/useAuth";
 
 const CardOption = () => {
   const { axiosSecure } = useAxiosSecure();
   const [cartData, error, isLoading, refetch] = useCart();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const { cartCookies, refetch: cookieRefetch } = useCookiesData();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleChecked = async (item) => {
     try {
-      // Prepare fields to patch, e.g., marking the item as checked
-      const check = { check: "checked" }; // Specify the field you want to update
-      const res = await axiosSecure.patch(`/addToCart/${item._id}`, check);
+      const check = { check: "checked" };
+      let response;
 
-      if (res.data.modifiedCount > 0) {
+      if (user?.email) {
+        response = await axiosSecure.patch(`/addToCart/${item._id}`, check);
+      } else {
+        response = await axiosSecure.patch(`/addToCartCookies/${item._id}`, check);
+      }
+
+      if (response.data.modifiedCount > 0) {
         refetch();
-        // Navigate to the EditAddress component after updating
+        if (!user?.email) {
+          cookieRefetch();
+          navigate(`/addToCartCookies/${item._id}`)
+        }
+       else{
         navigate(`/addToCart/${item._id}`);
+       }
       }
     } catch (error) {
       console.error("Failed to approve the order", error);
@@ -66,6 +80,8 @@ const CardOption = () => {
     return <p>Error fetching cart data: {error.message}</p>;
   }
 
+  const itemsToRender = user?.email ? cartData : cartCookies;
+
   return (
     <div className="overflow-x-hidden min-h-screen bg-white">
       <table className="min-w-[1200px] bg-white shadow-md mt-7 mx-auto table-auto">
@@ -79,8 +95,8 @@ const CardOption = () => {
           </tr>
         </thead>
         <tbody>
-          {cartData && cartData.length > 0 ? (
-            cartData.map((item) => (
+          {itemsToRender && itemsToRender.length > 0 ? (
+            itemsToRender.map((item) => (
               <tr className="h-24 border-b bg-stone-100 text-gray-800" key={item._id}>
                 <td className="px-6 py-4 text-left">
                   <img className="h-11 w-11 rounded-lg bg-slate-500 object-cover" src={item.image} alt={item.name} />
@@ -95,7 +111,10 @@ const CardOption = () => {
                   {item.check === "checked" ? (
                     <p className="text-white bg-teal-600 w-24 h-7 rounded-md p-1 text-center">checked</p>
                   ) : (
-                    <button className="flex items-center rounded-full bg-teal-400 px-4 py-2 font-bold text-white shadow-md transition-all duration-300 hover:bg-teal-500" onClick={() => handleChecked(item)}>
+                    <button
+                      className="flex items-center rounded-full bg-teal-400 px-4 py-2 font-bold text-white shadow-md transition-all duration-300 hover:bg-teal-500"
+                      onClick={() => handleChecked(item)}
+                    >
                       Checkout
                     </button>
                   )}
@@ -111,12 +130,11 @@ const CardOption = () => {
               </tr>
             ))
           ) : (
-          
-              <div className="text-center py-8 text-4xl text-gray-300">
-               <h1>No Cart Data Exist</h1>
-              </div>
-              
-           
+            <tr>
+              <td colSpan="5" className="text-center py-8 text-4xl text-gray-300">
+                <h1>No Cart Data Exist</h1>
+              </td>
+            </tr>
           )}
         </tbody>
       </table>

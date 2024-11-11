@@ -4,6 +4,7 @@ import { createContext, useEffect,  useState } from "react";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 import auth from "../../../../Firebase/Firebase.config";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
+import PropTypes from "prop-types";
 
 
 
@@ -69,20 +70,16 @@ const logOut = async () => {
                 }
             } catch (error) {
                 console.error('Error generating JWT token:', error);
-            } finally {
-                setLoading(false); 
             }
         } else {
             localStorage.removeItem('access-token');
-            setLoading(false); 
         }
+        setLoading(false); // Only set loading to false after complete
         console.log('observing current user', currentUser);
     });
-    
-    return () => {
-        unSubscribe();
-    };
+    return () => unSubscribe();
 }, [axiosSecure]);
+
 
 
 
@@ -116,4 +113,8 @@ return(
 
 export default AuthProvider;
 
+AuthProvider.propTypes = {
+    children: PropTypes.node,  
+   
+  };
 

@@ -4,38 +4,32 @@ import Search from "./Search";
 import { useState, useEffect } from "react";
 import useCart from "../../Hook/useCart";
 import { CiShoppingCart } from "react-icons/ci";
+import useCookiesData from "../../Hook/useCookiesData";
 
 const Header = () => {
   const [showNav, setShowNav] = useState(true);
-  const [isBadgeVisible, setIsBadgeVisible] = useState(true); // Control badge visibility
-  const  [cartData, error, isLoading, refetch]  = useCart(); // Get cart data from hook
-
-
-
-  // Refetch cart data on component mount
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-
-
+  const [isBadgeVisible, setIsBadgeVisible] = useState(true);
+  const { cartData, refetch: refetchCart } = useCart(); 
+  const { cartCookies, refetch: refetchCookies } = useCookiesData();
 
   const handleSearchIconClick = (isSearchVisible) => {
     setShowNav(!isSearchVisible);
   };
 
   const handleCartIconClick = () => {
-    // Hide the badge when the cart icon is clicked
     setIsBadgeVisible(false);
-    refetch()
+    refetchCart; 
+    refetchCookies;
   };
 
   useEffect(() => {
-    // Show the badge when a new item is added to the cart
-    if (cartData && cartData.length > 0) {
-      setIsBadgeVisible(true); // Make the badge visible again when cart is updated
+    // Show the badge when new items are added to either cart
+    if ((cartData && cartData.length > 0) || (cartCookies && cartCookies.length > 0)) {
+      setIsBadgeVisible(true);
     }
-  }, [cartData]); // Depend on cartData updates
+  }, [cartData, cartCookies]);
+
+  const totalItems = (cartData?.length || 0) + (cartCookies?.length || 0);
 
   const nav = (
     <>
@@ -65,19 +59,6 @@ const Header = () => {
       </span>
     </>
   );
-
-
-  if (isLoading) {
-    return <p>Loading cart data...</p>;
-  }
-
-  if (error) {
-    return <p>Error fetching cart data: {error.message}</p>;
-  }
-
-
-
-
 
   return (
     <div className="navbar bg-gradient-to-r sticky top-0 z-10 from-cyan-400 to-violet-700 border-none px-10 mx-auto">
@@ -116,10 +97,12 @@ const Header = () => {
             <Link to="/cart">
               <button onClick={handleCartIconClick}>
                 <CiShoppingCart className="text-white font-bold w-7 h-7 indicator" />
-                {isBadgeVisible && cartData?.length > 0 && (
-                  <span  className="badge badge-secondary badge-sm indicator-item -translate-x-3 -translate-y-4 ">
-                    {cartData.length}
+                {isBadgeVisible && totalItems > 0 ? (
+                  <span className="badge badge-secondary badge-sm indicator-item -translate-x-3 -translate-y-4 ">
+                    {totalItems}
                   </span>
+                ) : (
+                  <span className="badge badge-secondary badge-sm indicator-item -translate-x-3 -translate-y-4 ">0</span>
                 )}
               </button>
             </Link>
