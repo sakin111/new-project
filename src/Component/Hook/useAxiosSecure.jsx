@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Determine base URL based on environment
 const baseURL = process.env.NODE_ENV === "production"
-  ? 'https://new-project-server-maliksakin53gmailcoms-projects.vercel.app/'
+  ? 'https://new-project-server-git-main-maliksakin53gmailcoms-projects.vercel.app/'
   : 'http://localhost:5000';
 
 const axiosSecure = axios.create({
