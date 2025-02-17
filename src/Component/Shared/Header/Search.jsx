@@ -1,88 +1,127 @@
 import { useState } from "react";
 import { GoSearch } from "react-icons/go";
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import { AiOutlineClose } from "react-icons/ai";
 
-
 const Search = ({ onSearchIconClick }) => {
-    const [showSearch, setShowSearch] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const toggleSearchBar = () => {
-        setShowSearch(!showSearch);
-        onSearchIconClick(!showSearch);
-    };
+  const toggleSearchBar = () => {
+    setShowSearch(!showSearch);
+    onSearchIconClick(!showSearch);
+  };
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
-    return (
-        <div className="flex justify-center items-center gap-5 h-16">
-            <button onClick={toggleSearchBar} className="">
-            {showSearch ? (
-                   <AiOutlineClose 
-                   className="
-                       text-white 
-                       font-bold 
-                       absolute 
-                       right-8  /* Adjusted to avoid overflow on smaller screens */
-                       transform 
-                       -translate-x-2/3 
-                       -translate-y-4 
-                       w-6 h-6 /* Default size for small screens */
-                       sm:w-7 sm:h-7 /* Slightly larger on small screens */
-                       md:w-8 md:h-8 /* Larger on medium screens */
-                       lg:right-32 /* Adjust right offset for larger screens */
-                       xl:right-72 /* Further adjust right offset for extra-large screens */
-                   "
-               />
-               
-                    
-                ) : (
-                    <GoSearch className="text-white font-bold w-7 h-7"/>
-                )}
-            </button>
-            {showSearch && (
-                <Box
-                    className="absolute left-1/2 transform -translate-x-1/2 w-10/12 sm:w-72 md:w-96 lg:w-5/12 max-w-md xs "
-                >
-                    <TextField 
-                       sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                            borderRadius: '9999px', 
-                            '& fieldset': {
-                                borderColor: 'white', 
-                            },
-                            '&:hover fieldset': {
-                                borderColor: 'white', 
-                            },
-                            '&.Mui-focused fieldset': {
-                                borderColor: 'white', 
-                            },
-                            input: {
-                                color: 'white'
-                            }
-                        },
-                        '& .MuiInputLabel-root': {
-                            color: 'white', 
-                        },
-                        '& .MuiInputLabel-root.Mui-focused': {
-                            color: 'white', 
-                        },
-                    }}
-                        fullWidth 
-                        label="Search" 
-                        id="fullWidth" 
-                        value={searchTerm} 
-                        onChange={handleSearchChange}
-                       
-                    />
-                </Box>
-            )}
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  return (
+    <div className="relative flex justify-center items-center gap-5 h-16">
+      {/* Search Icon for smaller screens */}
+      <button
+        onClick={toggleDrawer}
+        className="lg:hidden block text-black font-bold w-7 h-7"
+      >
+        {isDrawerOpen ? (
+          <AiOutlineClose className="text-black w-7 h-7" />
+        ) : (
+          <GoSearch className="text-black font-bold w-7 h-7" />
+        )}
+      </button>
+
+      {/* Search Bar for large/medium screens */}
+      <Box className=" hidden lg:flex items-center gap-4 w-full max-w-3xl" sx={{width: 500, maxWidth : "100%"}}>
+        <TextField
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "5px",
+              height: "50px",
+              "& input": {
+                height: "40px", 
+                padding: "10px 14x", 
+              },
+              "& fieldset": {
+                borderColor: "gray"
+              },
+              "&:hover fieldset": {
+                borderColor: "gray"
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "gray",
+              },
+              input: {
+                color: "gray",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              color: "gray",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "gray",
+            },
+          }}
+          fullWidth
+          label="Search"
+          id="search-bar"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </Box>
+
+      {/* Drawer Search Bar for smaller screens */}
+      {isDrawerOpen && (
+        <div
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 lg:hidden flex justify-start items-center"
+          onClick={toggleDrawer} // Close the drawer if clicked outside
+        >
+          <div
+            className="relative flex justify-center items-center w-4/12 bg-white h-full transition-all transform translate-x-0 lg:hidden"
+            onClick={(e) => e.stopPropagation()} // Prevent drawer close when clicking inside
+          >
+            <Box className="w-full h-16 p-4">
+              <TextField
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "9999px",
+                    "& fieldset": {
+                      borderColor: "gray",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "gray",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "gray",
+                    },
+                    input: {
+                      color: "black",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "black",
+                  },
+                }}
+                fullWidth
+                label="Search"
+                id="drawer-search-bar"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </Box>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Search;

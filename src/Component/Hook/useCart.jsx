@@ -1,45 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "./useAxiosSecure";
 import useAuth from "./useAuth";
+import useAxiosSecure from "./useAxiosSecure";
+
 
 const useCart = () => {
-    const { user, isLoading: isAuthLoading } = useAuth()  || {};
-    const { axiosSecure } = useAxiosSecure();
-
-    const { data, error, isLoading, refetch } = useQuery({
-        queryKey: ["cartData", user?.email],
-        queryFn: async () => {
-            if (!user?.email) {
-                throw new Error("User email is missing");
-            }
-            try {
-                const res = await axiosSecure.get(`/addToCart/${encodeURIComponent(user.email)}`);
-                if (Array.isArray(res.data)) {
-                    return res.data;
-                } else if (res.data) {
-                    return [res.data];
-                } else {
-                    return [];
-                }
-            } catch (err) {
-                // Handle Axios errors
-                if (err.response && err.response.data && err.response.data.message) {
-                    throw new Error(err.response.data.message);
-                } else if (err.message) {
-                    throw new Error(err.message);
-                } else {
-                    throw new Error("An unknown error occurred");
-                }
-            }
+    const {axiosSecure} = useAxiosSecure();
+    const { user} = useAuth();
+    const { refetch, data: cartData = [] } = useQuery({
+        queryKey: ['cart', user?.email],
+        queryFn: async() => {
+            const res = await axiosSecure.get(`/addToCart?email=${user.email}`);
+            return res.data;
         },
-        enabled: !!user?.email && !isAuthLoading, // Ensure query runs only when user is logged in
-        refetchInterval: 300000, // 5 minutes
-    });
+        enable: !!user?.email
+    })
 
-    const cartData = data ?? [];
-    console.log(cartData, "this is cartData hook");
+     
+    const total = cartData.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), // Multiply by quantity if present
+  0);
 
-    return [cartData, error, isLoading, refetch];
+
+    return {cartData, refetch,total} ;
 };
 
 export default useCart;

@@ -101,7 +101,7 @@ const authInfo = {
 }
 
 
-
+ console.log(user,"this is user from auth provider")
 
 return(
     <AuthContext.Provider value={authInfo}>    

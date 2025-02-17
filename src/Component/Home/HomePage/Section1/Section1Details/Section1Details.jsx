@@ -13,9 +13,14 @@ const Section1Details = () => {
   const card = useLoaderData();
 
   const [selectedPrice, setSelectedPrice] = useState(card.size?.[0]?.price || 0);
+  const [selectedSize, setSelectedSize] = useState(card.size?.[0]?.count || 0);
   const [number, setNumber] = useState(1);
 
-  const handleSizeClick = (price) => setSelectedPrice(price);
+  const handleSizeClick = (price, count) => {
+    setSelectedPrice(price);
+    setSelectedSize(count);
+  };
+   
   const handleAdd = () => setNumber((prev) => Math.min(prev + 1, 100));
   const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 1));
 
@@ -65,7 +70,7 @@ const Section1Details = () => {
               key={index}
               name="price"
               className="mr-2 md:mr-3 mb-2 md:mb-3 rounded-full border border-[#0d87f8] px-2 md:px-3 lg:px-4 py-1 md:py-2 text-xs md:text-sm lg:text-base text-[#0d87f8] hover:bg-[#0d87f8] hover:text-white duration-300"
-              onClick={() => handleSizeClick(size.price)}
+              onClick={() => handleSizeClick(size.price, size.count)}
             >
               {size.count}
             </button>
@@ -88,7 +93,7 @@ const Section1Details = () => {
         <div className="my-8 md:my-10 mx-auto w-full text-center lg:text-left md:text-left sm:text-left">
 
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-7 sm:flex-row sm:gap-6">
-            <AddCartButton selectedPrice={parseInt(selectedPrice)} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} ></AddCartButton>
+            <AddCartButton _id={card._id} selectedPrice={parseInt(selectedPrice)} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} size={selectedSize} ></AddCartButton>
           <Checkout selectedPrice={parseInt(selectedPrice)} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} ></Checkout>
           </div>
         

@@ -1,115 +1,96 @@
 import { Link } from "react-router-dom";
-import './Header.css';
 import Search from "./Search";
-import { useState, useEffect } from "react";
-import useCart from "../../Hook/useCart";
 import { CiShoppingCart } from "react-icons/ci";
+import useCart from "../../Hook/useCart";
 import useCookiesData from "../../Hook/useCookiesData";
+import useAuth from "../../Hook/useAuth";
+
+import { CiUser } from "react-icons/ci";
+import Category from "../../Pages/Category";
+
 
 const Header = () => {
-  const [showNav, setShowNav] = useState(true);
-  const [isBadgeVisible, setIsBadgeVisible] = useState(true);
-  const { cartData, refetch: refetchCart } = useCart(); 
-  const { cartCookies, refetch: refetchCookies } = useCookiesData();
+  const { cartData,  } = useCart();
+  const { cartCookies,  } = useCookiesData();
+  const { user } = useAuth();
 
-  const handleSearchIconClick = (isSearchVisible) => {
-    setShowNav(!isSearchVisible);
-  };
+  const totalItems = user?.email ? cartData?.length : cartCookies.length || 0;
 
-  const handleCartIconClick = () => {
-    setIsBadgeVisible(false);
-    refetchCart; 
-    refetchCookies;
-  };
 
-  useEffect(() => {
-    // Show the badge when new items are added to either cart
-    if ((cartData && cartData.length > 0) || (cartCookies && cartCookies.length > 0)) {
-      setIsBadgeVisible(true);
-    }
-  }, [cartData, cartCookies]);
 
-  const totalItems = (cartData?.length || 0) + (cartCookies?.length || 0);
 
-  const nav = (
-    <>
-      <span className="gradient-text text-base font-sans gradient-border pb-2 active:text-white">
-        <Link to="/">Home</Link>
-        <span className="gradient-border"></span>
-      </span>
-      <span className="gradient-text font-sans gradient-border text-md text-base">
-        <Link to="/shop">Shop</Link>
-        <span className="gradient-border"></span>
-      </span>
-      <span className="gradient-text font-sans gradient-border text-md text-base">
-        <Link to="/bestDeal">Best Deal</Link>
-        <span className="gradient-border"></span>
-      </span>
-      <span className="gradient-text font-sans gradient-border text-md text-base">
-        <Link to="/faq">FAQ</Link>
-        <span className="gradient-border"></span>
-      </span>
-      <span className="gradient-text font-sans gradient-border text-md text-base">
-        <Link to="/contact">Contact</Link>
-        <span className="gradient-border"></span>
-      </span>
-      <span className="gradient-text font-sans gradient-border text-md text-base">
-        <Link to="/blogs">Our Blogs</Link>
-        <span className="gradient-border"></span>
-      </span>
-    </>
-  );
 
   return (
-    <div className="navbar bg-gradient-to-r sticky top-0 z-10 from-cyan-400 to-violet-700 border-none px-10 mx-auto">
-      <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
-            </svg>
+    <header className="bg-white sticky z-10  py-6 ">
+      <div className="container mx-auto flex items-center justify-between px-4 lg:px-10 h-16">
+        {/* Navbar Start */}
+        <div className="flex items-center gap-8">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <img
+              src="https://i.imgur.com/q8sbyrq.png"
+              alt="Polygone Logo"
+              className="w-12 h-12"
+            />
+            <h4 className="text-cyan-700 text-lg font-semibold">POLYGONE</h4>
           </div>
-          {showNav && (
-            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-              {nav}
-            </ul>
-          )}
+
+       <Category></Category>
+
+
         </div>
-        {showNav && (
-          <div>
-            <img src="https://i.ibb.co/mSC0cV4/Gemini-Generated-Image-6fnebt6fnebt6fne-removebg-preview.png" alt="logo" className="w-24 h-16" />
+
+        {/* Navbar End */}
+        <div className="flex items-center gap-6">
+          <Search />
+          <Link to="/cart" aria-label="View Cart">
+            <div className="relative">
+              <CiShoppingCart className="text-black w-7 h-7" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-teal-400 text-white text-xs rounded-full px-2 py-0.5">
+                  {totalItems}
+                </span>
+              )}
+            </div>
+          </Link>
+
+            {/* Profile */}
+            <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-ghost btn-circle avatar"
+          >
+            <div className="rounded-full p-1">
+              {user && user.displayName ? (
+                <div className="text-base w-7 h-7 text-center  bg-gray-600 text-white">{user.displayName.charAt(0).toUpperCase()}</div>
+              ) : (
+                <CiUser  className="w-6 h-6"  />
+              )}
+            </div>
+
           </div>
-        )}
+
+        </div>
       </div>
-      <div className="navbar-center hidden lg:flex">
-        {showNav && (
-          <ul className="menu menu-horizontal px-1 gap-6">
-            {nav}
+
+      {/* Mobile Dropdown */}
+      {/* <div className="lg:hidden bg-white px-4 py-2 border-t">
+        <nav>
+          <ul className="flex flex-col gap-2">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className="text-base font-medium text-gray-700 hover:text-cyan-700"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
           </ul>
-        )}
-      </div>
-      <div className="navbar-end gap-7">
-        <div>
-          <Search onSearchIconClick={handleSearchIconClick} />
-        </div>
-        <div>
-          {showNav && (
-            <Link to="/cart">
-              <button onClick={handleCartIconClick}>
-                <CiShoppingCart className="text-white font-bold w-7 h-7 indicator" />
-                {isBadgeVisible && totalItems > 0 ? (
-                  <span className="badge badge-secondary badge-sm indicator-item -translate-x-3 -translate-y-4 ">
-                    {totalItems}
-                  </span>
-                ) : (
-                  <span className="badge badge-secondary badge-sm indicator-item -translate-x-3 -translate-y-4 ">0</span>
-                )}
-              </button>
-            </Link>
-          )}
-        </div>
-      </div>
-    </div>
+        </nav>
+      </div> */}
+    </header>
   );
 };
 

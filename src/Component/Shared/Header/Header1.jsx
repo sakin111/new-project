@@ -1,13 +1,15 @@
-import { BsCart2, BsThreeDotsVertical } from "react-icons/bs";
-import { FaCircleUser, FaOrcid } from "react-icons/fa6";
+import { BsCart2 } from "react-icons/bs";
+import { FaOrcid } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { motion } from 'framer-motion';
 import { LuLayoutDashboard, LuLogIn, LuLogOut } from "react-icons/lu";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoReorderThreeOutline, IoSettingsOutline } from "react-icons/io5";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 import { signOut } from "firebase/auth";
 import auth from "../../../../Firebase/Firebase.config";
+import { IoIosArrowDown } from "react-icons/io";
+import { FaFireAlt } from "react-icons/fa";
 
 const itemVariants = {
   open: {
@@ -32,13 +34,34 @@ const Header1 = () => {
     }
   };
 
+
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    { name: "Our Blogs", path: "/blogs" },
+  ];
+
+
+
+
   return (
     <div>
-      <div className="navbar h-14 bg-base-100">
-        <div className="flex-1"></div>
+
+
+
+
+
+
+      <div className="navbar h-14 bg-base-100 border-b-2 px-10">
+
+
+
+
+
+      <div className="flex-1"></div>
         <div className="flex-none">
           {/* Dropdown */}
-          <div className="dropdown dropdown-end z-30">
+          <div className="dropdown dropdown-start z-30 mx-4">
             <motion.nav
               initial={false}
               animate={isOpen ? "open" : "closed"}
@@ -57,7 +80,7 @@ const Header1 = () => {
                   transition={{ duration: 0.2 }}
                   style={{ originY: 0.55 }}
                 >
-                  <BsThreeDotsVertical />
+                 <IoReorderThreeOutline className="w-9 h-9" />
                 </motion.div>
               </motion.button>
               <motion.ul
@@ -114,7 +137,7 @@ const Header1 = () => {
                   {
                     user ? (
                       <motion.li variants={itemVariants}>
-                        <motion.button  onClick={logOut} >
+                        <motion.button onClick={logOut} >
                           <LuLogOut /> <motion.div>logout</motion.div>
                         </motion.button>
                       </motion.li>
@@ -140,22 +163,69 @@ const Header1 = () => {
             </motion.nav>
           </div>
 
-          {/* Profile */}
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="rounded-full">
-              {user && user.displayName ? (
-                <div className="text-xl w-7 h-7 bg-teal-300 text-white">{user.displayName.charAt(0).toUpperCase()}</div>
-              ) : (
-                <FaCircleUser className="w-7 h-7" />
-              )}
-            </div>
-
-          </div>
+        
         </div>
+
+
+
+
+
+
+        {/* Navbar Links */}
+        <nav className="hidden lg:flex justify- start w-full mx-10">
+          <ul className="flex gap-7">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className="text-base font-medium text-gray-700 font-Roboto hover:text-cyan-700"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+
+          {/* this is hover  */}
+
+
+
+          <div className="flex-none">
+        <ul className="menu menu-horizontal p-0">
+          <li className="relative group">
+            {/* Hoverable Word */}
+            <Link className="hover:text-cyan-600 text-gray-700 cursor-pointer text-base font-Roboto"> <FaFireAlt className=" text-orange-600 "/>  Best Deal <IoIosArrowDown /></Link>
+
+            {/* Dropdown Menu */}
+            <ul className="absolute left-0 top-full hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg p-2 w-40 z-10">
+              <li>
+                <Link to="/" className="hover:bg-gray-100 p-2 rounded">
+                  Web Design
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="hover:bg-gray-100 p-2 rounded">
+                  SEO Services
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="hover:bg-gray-100 p-2 rounded">
+                  Content Writing
+                </Link>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+        </nav>
+
+
+
+
+
+
+      
       </div>
     </div>
 

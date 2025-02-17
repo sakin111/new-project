@@ -21,7 +21,7 @@ const {id} = useParams()
       } catch (error) {
         console.error("Error fetching cart item:", error);
         throw error;
-      }
+      } 
     },
     enabled: !!user?.email, // Only fetch when `userData` is available
   });

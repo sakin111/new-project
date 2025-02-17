@@ -4,19 +4,19 @@ import Section1TextAnimation from "../Section1/Section1Details/Section1TextAnima
 import Section1Span from "../Section1/Section1Details/Section1Span";
 import Checkout from "../../../Shared/payment/Checkout";
 import AddCartButton from "../../../Shared/payment/AddCartButton";
-import useAuth from "../../../Hook/useAuth";
+
 
 
 const Section2Details = () => {
 
-  const { user } = useAuth()
+
   const card = useLoaderData();
   const [selectedPrice, setSelectedPrice] = useState(card.size[0]?.price || 0);
   const [number, setNumber] = useState(0);
 
   const handleSizeClick = (price) => setSelectedPrice(price);
   const handleAdd = () => setNumber((prev) => Math.min(prev + 1, 100));
-  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 0));
+  const handleReduce = () => setNumber((prev) => Math.max(prev - 1, 1));
 
   console.log(selectedPrice)
   return (
@@ -77,8 +77,8 @@ const Section2Details = () => {
           <div className="my-8 md:my-10 mx-auto w-full text-center lg:text-left md:text-left sm:text-left">
 
             <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-7 sm:flex-row sm:gap-6">
-              <AddCartButton selectedPrice={selectedPrice} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} email={user.email}></AddCartButton>
-              <Checkout selectedPrice={selectedPrice} productName={card.name} number={number} imageFront={card.imageFront} productCategory={card.category} ></Checkout>
+            <AddCartButton selectedPrice={parseInt(selectedPrice)} productName={card.name} number={number} imageFront={card.images} productCategory={card.category} ></AddCartButton>
+            <Checkout selectedPrice={parseInt(selectedPrice)} productName={card.name} number={number} imageFront={card.images} productCategory={card.category} ></Checkout>
             </div>
 
           </div>

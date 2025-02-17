@@ -14,6 +14,8 @@ import Private from "./Component/Shared/Secure/Private";
 import EditAddress from "./Component/Shared/payment/MakeAddress/EditAddress";
 import AllCart from "./Component/Shared/Dashboard/AllCart";
 import MyCart from "./Component/Shared/Dashboard/MyCart";
+import OrderConfirm from "./Component/Shared/payment/MakeAddress/OrderConfirm";
+import Analytics from "./Component/Shared/Dashboard/Analytics";
 
 
 
@@ -23,18 +25,18 @@ import MyCart from "./Component/Shared/Dashboard/MyCart";
 // http://localhost:5000
 // https://new-project-server-maliksakin53gmailcoms-projects.vercel.app
 
-{/*  errorElement: <ErrorPage></ErrorPage>, */}
+{/*  errorElement: <ErrorPage></ErrorPage>, */ }
 
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
-       
+
         children: [
             {
                 path: "/",
-                element:<HomePage></HomePage>
+                element: <HomePage></HomePage>
             },
             {
                 path: "/login",
@@ -45,15 +47,15 @@ const router = createBrowserRouter([
                 element: <SignUp></SignUp>
             },
             {
-                path:"/card",
-                element:<Section1></Section1>
+                path: "/card",
+                element: <Section1></Section1>
             },
             {
                 path: "/card/:id",
                 element: <Section1Details></Section1Details>,
                 loader: ({ params }) => fetch(`http://localhost:5000/card/${params.id}`)
             },
-           
+
             {
                 path: "/cardMix/:id",
                 element: <Section2Details></Section2Details>,
@@ -62,51 +64,59 @@ const router = createBrowserRouter([
             {
                 path: "/cart",
                 element: <CardOption></CardOption>,
-             
+
             },
-            
+
             {
-                path: "/addToCart/:id",
+                path: "/checkout",
                 element: <EditAddress></EditAddress>,
-             
+
             },
+            // {
+            //     path: "/checkoutCookies", // Checkout page for guest users (cookies-based cart)
+            //     element: <EditAddress></EditAddress>,  // Same component for both users
+            // },
             {
                 path: '/myCart',
-                element:<MyCart></MyCart>
+                element: <MyCart></MyCart>
             },
-            
-            
-           
-         
-            
+            {
+                path: "/order-confirmation",
+                element: <OrderConfirm></OrderConfirm>
+            },
+
+
+
+
+
 
         ]
     },
 
     {
         path: '/dashboard',
-        element:<Private><Dashboard></Dashboard></Private>,
+        element: <Private><Dashboard></Dashboard></Private>,
         children: [
             {
-                path: '/dashboard/',
-                element: <HomePage></HomePage>
+                path: '/dashboard/analytics',
+                element: <AdminRoute><Analytics></Analytics></AdminRoute>
             },
             {
                 path: '/dashboard/users',
-                element:<AdminRoute><Users></Users></AdminRoute>
+                element: <AdminRoute><Users></Users></AdminRoute>
             },
             {
                 path: '/dashboard/allCart',
-                element:<AdminRoute><AllCart></AllCart></AdminRoute>
+                element: <AdminRoute><AllCart></AllCart></AdminRoute>
             },
             // {
             //     path: '/dashboard/myCart',
             //     element:<MyCart></MyCart>
             // },
-           
+
 
         ]
-           
+
     }
 ]);
 

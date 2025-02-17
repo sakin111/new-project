@@ -30,7 +30,7 @@ const SignUp = () => {
         const password = e.target.password.value;
         const name = e.target.name.value;
         console.log(email, password, name);
-        setErrorRegister('')
+        setErrorRegister('');
         setPasscode('');
 
 
@@ -53,6 +53,7 @@ const SignUp = () => {
                         const userInfo = {
                             name: name,
                             email: email,
+                            password: password
                            
                         };
 

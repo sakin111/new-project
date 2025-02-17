@@ -3,37 +3,40 @@ import useAxiosSecure from "../../Hook/useAxiosSecure";
 import useAuth from "../../Hook/useAuth";
 import PropTypes from "prop-types";
 
-const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, productName }) => {
+const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, productName, size,_id }) => {
   const { axiosSecure } = useAxiosSecure();
   const { user } = useAuth();
 
   const handleAddToCart = async () => {
-    console.log(selectedPrice, number, imageFront, productCategory, productName);
+    console.log(selectedPrice, number, imageFront, productCategory, productName,size,_id);
 
     const addInfo = {
+      _id: _id,
       price: selectedPrice,
+      size:size,
       quantity: number,
       image: imageFront,
       category: productCategory,
       name:productName,  
     };
    
-    // ...(user?.email && { email: user.email }),
+
 
     try {
     let response;
     if (user?.email) {
-      response = await axiosSecure.post("/addToCart", {email:user?.email,addInfo});
+      response = await axiosSecure.post("/addToWishlist", {email:user.email,addInfo});
+      
+
     } else {
       response = await axiosSecure.post("/addToCartCookies", {addInfo});
     }
-  
       // Handle success notification
       if (response.data.message) {
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: response.data.message,
+          title: "cart added successfully",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -66,6 +69,8 @@ const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, pro
 
 AddCartButton.propTypes = {
   selectedPrice: PropTypes.number.isRequired,
+  _id: PropTypes.object.isRequired,
+  size: PropTypes.string.isRequired,
   number: PropTypes.number.isRequired,
   imageFront: PropTypes.string.isRequired,
   productCategory: PropTypes.string.isRequired,

@@ -2,6 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "../Shared/Header/Header";
 import Footer from "../Shared/Footer/Footer";
 import Header1 from "../Shared/Header/Header1";
+import HeaderUp from "../Shared/Header/HeaderUp";
 
 const Main = () => {
   const location = useLocation();
@@ -9,11 +10,14 @@ const Main = () => {
                          location.pathname.includes('signup');
 
   return (
-    <div>
+    <div >
       {!noHeaderFooter && (
         <>
-          <Header1 />
-          <Header />
+        <HeaderUp />
+        <Header />
+        <Header1 />
+     
+             
         </>
       )}
       <Outlet />
