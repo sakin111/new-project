@@ -53,13 +53,13 @@ const router = createBrowserRouter([
             {
                 path: "/card/:id",
                 element: <Section1Details></Section1Details>,
-                loader: ({ params }) => fetch(`https://new-project-server-git-main-maliksakin53gmailcoms-projects.vercel.app//card/${params.id}`)
+                loader: ({ params }) => fetch(`https://new-project-server-git-main-maliksakin53gmailcoms-projects.vercel.app/card/${params.id}`)
             },
 
             {
                 path: "/cardMix/:id",
                 element: <Section2Details></Section2Details>,
-                loader: ({ params }) => fetch(`https://new-project-server-git-main-maliksakin53gmailcoms-projects.vercel.app//cardMix/${params.id}`)
+                loader: ({ params }) => fetch(`https://new-project-server-git-main-maliksakin53gmailcoms-projects.vercel.app/cardMix/${params.id}`)
             },
             {
                 path: "/cart",
