@@ -1,11 +1,11 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../Hook/useAuth";
 import Swal from "sweetalert2";
 
-const Checkout = ({ selectedPrice, number,productName, productCategory }) => {
+const Checkout = ({ selectedPrice, number, productName, productCategory }) => {
   const { axiosSecure } = useAxiosSecure();
   const navigate = useNavigate();
   const { user } = useAuth(); // Retrieves authenticated user
@@ -16,7 +16,7 @@ const Checkout = ({ selectedPrice, number,productName, productCategory }) => {
     data: userData,
     isLoading,
     isError,
-   
+
   } = useQuery({
     queryKey: ["user", user?.email],
     queryFn: async () => {
@@ -38,7 +38,7 @@ const Checkout = ({ selectedPrice, number,productName, productCategory }) => {
 
   // Handle Payment Creation
   const handleCreatePayment = async () => {
-  
+
 
     if (isLoading) {
       alert("Loading user data, please wait...");
@@ -84,16 +84,16 @@ const Checkout = ({ selectedPrice, number,productName, productCategory }) => {
       });
 
       console.log("Payment response:", res.data);
-     if(res.data.modifiedCount > 0){
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Your Order Has Been Placed",
-        showConfirmButton: false,
-        timer: 1500
-      });
-     }
-     
+      if (res.data.modifiedCount > 0) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your Order Has Been Placed",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+
     } catch (error) {
       console.error("Error creating payment:", error);
       alert("An error occurred while placing your order. Please try again later.");
@@ -116,14 +116,16 @@ const Checkout = ({ selectedPrice, number,productName, productCategory }) => {
       <button
         onClick={handleCreatePayment}
         disabled={isPlacingOrder}
-        className={`rounded-full bg-gradient-to-r from-cyan-400 to-cyan-400 px-4 py-2 text-xs sm:text-sm md:text-lg lg:text-lg inline-flex text-white duration-300 active:scale-95 ${
-          isPlacingOrder ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        className={`rounded-full border-2 border-gray-500 hover:bg-cyan-800 hover:text-white
+px-4 py-2 text-xs sm:text-sm md:text-lg lg:text-lg inline-flex text-gray-600 duration-300 
+active:scale-95 ${isPlacingOrder ? "opacity-50 cursor-not-allowed" : ""
+          }`}
       >
         {isPlacingOrder ? "Placing Order..." : "Place Order"}
       </button>
     </div>
   );
 };
+
 
 export default Checkout;

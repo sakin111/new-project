@@ -64,6 +64,7 @@ const MyCart = () => {
                 <p className="text-sm text-gray-500 mt-1">Zone: {item.zone}</p>
                 <p className="text-gray-600 mt-2">💵 Price: ${item.price}</p>
                 <p className="text-gray-600">📦 Quantity: {item.quantity}</p>
+                
               </div>
               {/* Address & Method */}
               <div className="mt-4">

@@ -1,7 +1,9 @@
 // import { RiDeleteBinLine } from "react-icons/ri";
+
 import useCookiesData from "../../../Hook/useCookiesData";
 import useCart from "../../../Hook/useCart";
 import useAuth from "../../../Hook/useAuth";
+import PropTypes from "prop-types";
 
 const OrderCart = ({storedShip}) => {
   const { cartCookies } = useCookiesData(); // Fetch cart data from cookies
@@ -11,7 +13,7 @@ const OrderCart = ({storedShip}) => {
 
 
    const cartItems = user?.email? cartData : cartCookies
-   console.log(cartData, " this is cartData")
+
   // Calculate Subtotal
   const subtotal = cartItems?.reduce((acc, item) => acc + item.price * item.quantity, 0) || 0;
 
@@ -24,15 +26,15 @@ const OrderCart = ({storedShip}) => {
           <tbody>
             <tr>
               <td className="text-right font-medium pr-4">Subtotal:</td>
-              <td className="text-right font-medium">৳{subtotal.toFixed(2)}</td>
+              <td className="text-right font-medium">${subtotal.toFixed(2)}</td>
             </tr>
             <tr>
               <td className="text-right font-medium pr-4">Shipping:</td>
-              <td className="text-right font-medium">৳ {storedShip}</td>
+              <td className="text-right font-medium">$ {storedShip}</td>
             </tr>
             <tr className="border-t border-gray-300">
               <td className="text-right font-bold pr-4">Total:</td>
-              <td className="text-right font-bold">৳{(subtotal + (Number(storedShip) || 0)).toFixed(2)}</td>
+              <td className="text-right font-bold">${(subtotal + (Number(storedShip) || 0)).toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
@@ -40,5 +42,9 @@ const OrderCart = ({storedShip}) => {
     </div>
   );
 };
+
+OrderCart.propTypes = {
+  storedShip: PropTypes.number.require
+}
 
 export default OrderCart;

@@ -7,7 +7,7 @@ const AllCart = () => {
   const { axiosSecure } = useAxiosSecure();
 
   const { data: allCartItem = [], refetch, isLoading, isError } = useQuery({
-    queryKey: ["allCart"],
+    queryKey: ["myOrder"],
     queryFn: async () => {
       try {
         const res = await axiosSecure.get("/myOrder"); // Await the axios call

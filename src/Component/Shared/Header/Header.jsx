@@ -4,9 +4,8 @@ import { CiShoppingCart } from "react-icons/ci";
 import useCart from "../../Hook/useCart";
 import useCookiesData from "../../Hook/useCookiesData";
 import useAuth from "../../Hook/useAuth";
-
 import { CiUser } from "react-icons/ci";
-import Category from "../../Pages/Category";
+
 
 
 const Header = () => {
@@ -35,7 +34,7 @@ const Header = () => {
             <h4 className="text-cyan-700 text-lg font-semibold">POLYGONE</h4>
           </div>
 
-       <Category></Category>
+
 
 
         </div>

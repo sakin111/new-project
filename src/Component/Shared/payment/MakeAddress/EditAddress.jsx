@@ -27,12 +27,12 @@ const [cartItems, setCartItems] = useState(initialCartItems || []);
   const [storedShip, setStoredShip] = useState("50");
 
   const addressEndpoint = useMemo(() => 
-    user?.email ? "/fetchUserAddress" : "/fetchRealUser", 
+    user?.email ? "/fetchRealUser": "/fetchUserAddress" , 
     [user]
   );
   
-
-  console.log(user, "this is from edit address")
+console.log(cartData, "this is cartData")
+ 
 
   const {
     register,
@@ -46,7 +46,7 @@ const [cartItems, setCartItems] = useState(initialCartItems || []);
       postCode: "",
       phoneNumber: "",
       paymentMethod: "Cash on Delivery",
-      shippingZone: "50",
+      shippingZone: "10",
     },
   });
 
@@ -55,15 +55,17 @@ const [cartItems, setCartItems] = useState(initialCartItems || []);
   useEffect(() => {
     const fetchStoredAddress = async () => {
       try {
-        if (!user?.email) return;  // Add a check for user.email before making the request
+        if (!user?.email) return; // Ensure user email exists
   
         const response = await axiosSecure.get(addressEndpoint, {
-          params: { email: user.email }  // Use 'params' to send the email in query string
+          params: { email: user.email } // Send email as query param
         });
   
-        if (response.data.cookiesAddress) {
-          setStoredAddress(response.data.cookiesAddress);
-          console.log(response.data.cookiesAddress, "Stored Address");
+        const address = response.data.addressData || response.data.cookiesAddress; // ✅ Use addressData if available, else cookiesAddress
+  
+        if (address) {
+          setStoredAddress(address);
+          console.log(address, "Stored Address");
         }
       } catch (error) {
         console.error(`Error fetching address from ${addressEndpoint}:`, error);
@@ -71,7 +73,7 @@ const [cartItems, setCartItems] = useState(initialCartItems || []);
     };
   
     fetchStoredAddress();
-  }, [axiosSecure, addressEndpoint, user]);  // Keep dependencies as is
+  }, [axiosSecure, addressEndpoint, user]); // Dependencies remain unchanged
   
 
   useEffect(() => {
@@ -100,11 +102,11 @@ const onSubmit = async (formData) => {
 
   const itemsToSubmit = 
   cartItems?.length
-    ? cartItems.map((item) => ({ id: item._id, quantity: item.quantity, size : item.size })) 
+    ? cartItems.map((item) => ({ id: item._id, quantity: item.quantity, size : item.size , image:item.image, name:item.name , price:item.price, category: item.category, email:item.email})) 
     : cartCookies?.length
-    ? cartCookies.map((item) => ({ id: item._id, quantity: item.quantity, size : item.size  })) 
+    ? cartCookies.map((item) => ({ id: item._id, quantity: item.quantity, size : item.size, image:item.image, name:item.name , price:item.price, category: item.category,email:item.email })) 
     : cartData?.length
-    ? cartData.map((item) => ({ id: item._id, quantity: item.quantity, size : item.size  })) 
+    ? cartData.map((item) => ({ id: item._id, quantity: item.quantity, size : item.size , image:item.image, name:item.name , price:item.price, category: item.category, email:item.email })) 
     : [];
 
 if (!itemsToSubmit.length) {
@@ -206,7 +208,7 @@ if (!itemsToSubmit.length) {
                   className="border rounded-lg p-4 w-full"
                 >
                   <option value="Cash on Delivery">Cash on Delivery</option>
-                  <option value="Bank Transfer">Bank Transfer</option>
+                 
                 </select>
               </div>
               <div>
@@ -217,9 +219,9 @@ if (!itemsToSubmit.length) {
                   className="border rounded-lg p-4 w-full"
                   onChange={(e) => setStoredShip(e.target.value)}
                 >
-                  <option value="50">Inside Dhaka - 50 TK</option>
-                  <option value="80">Outside Dhaka (48 hours) - 80 TK</option>
-                  <option value="100">Outside Bangladesh - 100 TK</option>
+                  <option value="10">Inside Dhaka - 10 $</option>
+                  <option value="20">Outside Dhaka (48 hours) - 20 $</option>
+                  <option value="50">Outside Bangladesh - 50 $</option>
                 </select>
               </div>
             </div>

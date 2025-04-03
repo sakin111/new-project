@@ -9,6 +9,7 @@ const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, pro
 
   const handleAddToCart = async () => {
     console.log(selectedPrice, number, imageFront, productCategory, productName,size,_id);
+ 
 
     const addInfo = {
       _id: _id,
@@ -17,7 +18,8 @@ const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, pro
       quantity: number,
       image: imageFront,
       category: productCategory,
-      name:productName,  
+      name:productName, 
+      email:user.email 
     };
    
 
@@ -57,8 +59,8 @@ const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, pro
     <div>
       <button
         onClick={handleAddToCart}
-        className="rounded-full bg-gradient-to-r from-cyan-400 to-cyan-400 
-                  px-4 py-2 text-xs sm:text-sm md:text-lg lg:text-lg inline-flex text-white duration-300 
+        className="rounded-full border-2 border-gray-500 hover:bg-cyan-800 hover:text-white
+                  px-4 py-2 text-xs sm:text-sm md:text-lg lg:text-lg inline-flex text-gray-600 duration-300 
                   active:scale-95"
       >
         Add to Cart
@@ -69,7 +71,7 @@ const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, pro
 
 AddCartButton.propTypes = {
   selectedPrice: PropTypes.number.isRequired,
-  _id: PropTypes.object.isRequired,
+  _id: PropTypes.string.isRequired,
   size: PropTypes.string.isRequired,
   number: PropTypes.number.isRequired,
   imageFront: PropTypes.string.isRequired,

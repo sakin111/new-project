@@ -116,9 +116,9 @@ const Header1 = () => {
 
 
                 <motion.li variants={itemVariants} >
-                  <Link to="/myCart" className="flex justify-start items-center gap-3">
+                  <Link to="/myOrder" className="flex justify-start items-center gap-3">
                     <motion.div ><BsCart2></BsCart2></motion.div>
-                    <motion.div >My cart</motion.div>
+                    <motion.div >My Order</motion.div>
                   </Link>
                 </motion.li>
 
@@ -198,20 +198,20 @@ const Header1 = () => {
             <Link className="hover:text-cyan-600 text-gray-700 cursor-pointer text-base font-Roboto"> <FaFireAlt className=" text-orange-600 "/>  Best Deal <IoIosArrowDown /></Link>
 
             {/* Dropdown Menu */}
-            <ul className="absolute left-0 top-full hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg p-2 w-40 z-10">
+            <ul className="absolute left-0 top-full hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg p-2 w-72 z-10">
               <li>
                 <Link to="/" className="hover:bg-gray-100 p-2 rounded">
-                  Web Design
+                 <span className="font-semibold text-black font-mono"> Black market Sale</span> <span className="text-orange-300">50% off</span> 
                 </Link>
               </li>
               <li>
                 <Link to="/" className="hover:bg-gray-100 p-2 rounded">
-                  SEO Services
+                <span className="font-semibold text-neutral-700 font-mono">Friday Night sale</span>  
                 </Link>
               </li>
               <li>
                 <Link to="/" className="hover:bg-gray-100 p-2 rounded">
-                  Content Writing
+                <span className="font-semibold text-neutral-600 font-mono">coupon deal</span>
                 </Link>
               </li>
             </ul>
