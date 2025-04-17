@@ -52,7 +52,7 @@ const Header1 = () => {
 
 
 
-      <div className="navbar h-14 bg-base-100 border-b-2 px-10">
+      <div className="navbar h-9 bg-base-100 border-b-[1px] px-10">
 
 
 
@@ -200,17 +200,17 @@ const Header1 = () => {
             {/* Dropdown Menu */}
             <ul className="absolute left-0 top-full hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg p-2 w-72 z-10">
               <li>
-                <Link to="/" className="hover:bg-gray-100 p-2 rounded">
+                <Link to="/blackMarket" className="hover:bg-gray-100 p-2 rounded">
                  <span className="font-semibold text-black font-mono"> Black market Sale</span> <span className="text-orange-300">50% off</span> 
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:bg-gray-100 p-2 rounded">
+                <Link to="/fridayNight" className="hover:bg-gray-100 p-2 rounded">
                 <span className="font-semibold text-neutral-700 font-mono">Friday Night sale</span>  
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:bg-gray-100 p-2 rounded">
+                <Link to="/coupon" className="hover:bg-gray-100 p-2 rounded">
                 <span className="font-semibold text-neutral-600 font-mono">coupon deal</span>
                 </Link>
               </li>

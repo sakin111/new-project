@@ -31,8 +31,8 @@ if (error) return <div>Error: {error.message}</div>;
                             <div className="space-y-2 font-semibold">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h6 className="text-sm md:text-sm lg:text-sm font-custom font-banglaFont textColor1 text-xs-1">{item.name}</h6>
-                                        <p className="textColor1">$ {item.size[0].price}</p>
+                                        <h6 className="text-sm md:text-sm lg:text-sm font-custom font-banglaFont  text-xs-1">{item.name}</h6>
+                                        <p className="text-neutral-400 font-semibold"> {item.category}</p>
                                     </div>
                                   
                                 </div>

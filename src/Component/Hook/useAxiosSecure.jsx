@@ -15,6 +15,7 @@ const useAxiosSecure = () => {
     (config) => {
       // Retrieve the access token and guest session cookie if they exist
       const token = localStorage.getItem('access-token');
+      console.log('Access Token:', token); 
       const guestSessionId = document.cookie
         .split('; ')
         .find((row) => row.startsWith('guestSessionId='));

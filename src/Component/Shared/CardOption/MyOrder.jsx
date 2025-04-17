@@ -3,6 +3,9 @@ import useAuth from "../../Hook/useAuth";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import { useState } from "react";
 import {FaRegCopy } from "react-icons/fa6";
+import ProductTracking from "../payment/MakeAddress/ProductTracking";
+
+
 
 
 
@@ -10,6 +13,7 @@ const MyOrder = () => {
     const { user } = useAuth();
     const { axiosSecure } = useAxiosSecure();
     const [copiedId, setCopiedId] = useState(false)
+  
 
     const handleCopy = (order) => {
         if (order._id) {
@@ -43,7 +47,13 @@ const MyOrder = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-6">
-            <h2 className="text-2xl font-semibold text-center mb-6">My Orders</h2>
+           
+        <h2 className="text-2xl font-semibold text-center ">My Orders</h2>
+
+        { <ProductTracking />}
+   
+
+     
           
 
             {orders?.length > 0 ? (

@@ -20,19 +20,14 @@ const Header = () => {
 
 
   return (
-    <header className="bg-white sticky z-10  py-6 ">
-      <div className="container mx-auto flex items-center justify-between px-4 lg:px-10 h-16">
+    <header className="bg-white   py-3 ">
+      <div className="container mx-auto flex items-center justify-between px-4 lg:px-10 ">
         {/* Navbar Start */}
         <div className="flex items-center gap-8">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <img
-              src="https://i.imgur.com/q8sbyrq.png"
-              alt="Polygone Logo"
-              className="w-12 h-12"
-            />
-            <h4 className="text-cyan-700 text-lg font-semibold">POLYGONE</h4>
-          </div>
+         
+            <h4 className="text-2xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-950 via-purple-600 to-fuchsia-500 mb-4">ShopArt</h4>
+         
 
 
 

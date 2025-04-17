@@ -8,7 +8,7 @@ import auth from "../../../../Firebase/Firebase.config";
 const Login = () => {
     const { googleSignIn } = useAuth();
     const axiosPublic = useAxiosPublic();
-    const [feedback, setFeedback] = useState({ type: "", message: "" }); // Unified state for feedback
+    const [feedback, setFeedback] = useState({ type: "", message: "" });
     const navigate = useNavigate();
 
     // Function to handle email/password login
@@ -19,10 +19,10 @@ const Login = () => {
 
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
-            console.log(result.user);
+           
 
             // Save user to the backend
-            const userInfo = { email: result.user?.email, password: result.user?.password };
+            const userInfo = { email: result.user?.email, name: result.user?.displayName };
             await axiosPublic.post("/users", userInfo);
 
             setFeedback({ type: "success", message: "User login successful" });

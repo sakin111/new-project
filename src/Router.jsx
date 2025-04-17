@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Main from "./Component/Main/Main";
 import HomePage from "./Component/Home/HomePage/HomePage";
 import Login from "./Component/Shared/Login/Login";
@@ -20,6 +20,11 @@ import MyOrder from "./Component/Shared/CardOption/MyOrder";
 import SearchResults from "./Component/Shared/Header/SearchResult";
 import ErrorPage from "./Component/Shared/ErrorPage";
 import Shop from "./Component/Pages/Shop/Shop";
+import BlackMarket from "./Component/Pages/bestDeal/BlackMarket";
+import FridayNight from "./Component/Pages/bestDeal/FridayNight";
+import Coupon from "./Component/Pages/bestDeal/Coupon";
+import Blogs from "./Component/Pages/Blogs/Blogs";
+import Payment from "./Component/Shared/payment/MakeCardPayment/Payment";
 
 
 // Load environment variables
@@ -54,6 +59,11 @@ const router = createBrowserRouter([
       { path: "/myOrder", element: <MyOrder /> },
       { path: "/products", element: <SearchResults /> },
       { path: "/shop", element: <Shop/>},
+      { path: "/blackMarket", element: <BlackMarket></BlackMarket> },
+      { path: "/fridayNight", element:<FridayNight></FridayNight> },
+      { path: "/coupon", element:<Coupon></Coupon> },
+      { path: "/blogs", element:<Blogs></Blogs> },
+      { path: "/cardPay", element:<Payment></Payment>},
     ],
   },
   {
@@ -61,11 +71,21 @@ const router = createBrowserRouter([
     element: <Private><Dashboard /></Private>,
     errorElement: <ErrorPage />,
     children: [
+      { index: true, element: <Navigate to="userHome" replace /> }, // redirect to default
+    
+      // Admin
       { path: "analytics", element: <AdminRoute><Analytics /></AdminRoute> },
       { path: "users", element: <AdminRoute><Users /></AdminRoute> },
       { path: "allOrder", element: <AdminRoute><AllCart /></AdminRoute> },
       { path: "addSlider", element: <AdminRoute><AddSlider /></AdminRoute> },
+    
+      // User
+      { path: "userHome", element: <Private><MyCart /></Private> },
+      { path: "history", element:  <Private><MyOrder /> </Private> },
+      { path: "review", element:  <Private><CardOption />  </Private>},
+      { path: "paymentHistory", element:   <Private> <Payment /></Private> },
     ],
+    
   },
 ]);
 

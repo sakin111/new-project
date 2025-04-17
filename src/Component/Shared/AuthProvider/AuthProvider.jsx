@@ -42,12 +42,17 @@ const updateUserProfile = (name, photoURL) => {
 
 const logOut = async () => {
     try {
-      await signOut(auth);
-      console.log('User logged out');
+        // Remove both access-token and sessionID from localStorage
+        localStorage.removeItem('access-token');
+        localStorage.removeItem('sessionID');
+        
+        // Log the user out from Firebase
+        await signOut(auth);
+        console.log('User logged out');
     } catch (error) {
-      console.error('Error logging out:', error);
+        console.error('Error logging out:', error);
     }
-  };
+};
 
  const googleSignIn = () =>{
     setLoading(true)
@@ -57,28 +62,29 @@ const logOut = async () => {
 
 
 
-
  useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
-        setUser(currentUser);
-        if (currentUser) {
-            const userInfo = { email: currentUser.email };
-            try {
-                const res = await axiosSecure.post('/jwt', userInfo);
-                if (res.data.token) {
-                    localStorage.setItem('access-token', res.data.token);
-                }
-            } catch (error) {
-                console.error('Error generating JWT token:', error);
-            }
-        } else {
-            localStorage.removeItem('access-token');
+      setUser(currentUser);
+      if (currentUser) {
+        const userInfo = { email: currentUser.email };
+        try {
+          const res = await axiosSecure.post('/jwt', userInfo);
+          if (res.data.token) {
+            localStorage.setItem('access-token', res.data.token);
+          }
+        } catch (error) {
+          console.error('Error generating JWT token:', error);
         }
-        setLoading(false); // Only set loading to false after complete
-        console.log('observing current user', currentUser);
+      } else {
+        localStorage.removeItem('access-token');
+      }
+  
+      setLoading(false);
+      console.log('observing current user', currentUser);
     });
     return () => unSubscribe();
-}, [axiosSecure]);
+  }, [axiosSecure]);
+  
 
 
 

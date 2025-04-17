@@ -44,7 +44,7 @@ const OrderCart = ({storedShip}) => {
 };
 
 OrderCart.propTypes = {
-  storedShip: PropTypes.number.require
+  storedShip: PropTypes.string.isRequired
 }
 
 export default OrderCart;
