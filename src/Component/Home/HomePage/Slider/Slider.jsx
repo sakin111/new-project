@@ -14,7 +14,7 @@ const Slider = () => {
   const { data: SliderData, isLoading } = useQuery({
     queryKey: ["SliderData"],
     queryFn: async () => {
-      const response = await axiosPublic.get("/sliderData");
+      const response = await axiosPublic.get("/SliderData");
       return response.data;
     }
   });
@@ -25,10 +25,7 @@ const Slider = () => {
 
   return (
     <div>
-      {/* Category Section */}
-      {/* <div className="w-full lg:w-1/4">
-        <Category />
-      </div> */}
+    
 
       {/* Swiper Section */}
       <div className="w-full lg:w-[95%] mx-auto py-6">

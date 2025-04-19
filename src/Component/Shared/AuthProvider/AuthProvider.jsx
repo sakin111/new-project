@@ -42,11 +42,7 @@ const updateUserProfile = (name, photoURL) => {
 
 const logOut = async () => {
     try {
-        // Remove both access-token and sessionID from localStorage
-        localStorage.removeItem('access-token');
-        localStorage.removeItem('sessionID');
-        
-        // Log the user out from Firebase
+
         await signOut(auth);
         console.log('User logged out');
     } catch (error) {
