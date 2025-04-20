@@ -10,7 +10,7 @@
  visually attractive,
  user friendly,
  more suggestion
- more to come
+ 
 
 
  thats it.
