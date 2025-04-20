@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const baseURL = process.env.NODE_ENV === "production"
-  ? 'https://new-project-server-git-main-maliksakin53gmailcoms-projects.vercel.app/'
+  ? 'hhttps://new-project-server-seven.vercel.app/'
   : 'http://localhost:5000';
 
 const axiosPublic = axios.create({
