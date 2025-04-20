@@ -59,27 +59,31 @@ const logOut = async () => {
 
 
  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        const userInfo = { email: currentUser.email };
-        try {
-          const res = await axiosSecure.post('/jwt', userInfo);
-          if (res.data.token) {
-            localStorage.setItem('access-token', res.data.token);
-          }
-        } catch (error) {
-          console.error('Error generating JWT token:', error);
+  const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    setLoading(true); // Always set loading true first
+    setUser(currentUser);
+
+    if (currentUser) {
+      const userInfo = { email: currentUser.email };
+      try {
+        const res = await axiosSecure.post('/jwt', userInfo);
+        if (res.data.token) {
+          localStorage.setItem('access-token', res.data.token);
         }
-      } else {
-        localStorage.removeItem('access-token');
+      } catch (error) {
+        console.error('Error generating JWT token:', error);
       }
-  
-      setLoading(false);
-      console.log('observing current user', currentUser);
-    });
-    return () => unSubscribe();
-  }, [axiosSecure]);
+    } else {
+      localStorage.removeItem('access-token');
+    }
+
+    setLoading(false); // 🔥 Move this after everything is finished
+    console.log('observing current user', currentUser);
+  });
+
+  return () => unSubscribe();
+}, [axiosSecure]);
+
   
 
 
