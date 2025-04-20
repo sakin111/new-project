@@ -2,9 +2,11 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import useAuth from "../../Hook/useAuth";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, productName, size,_id }) => {
   const { axiosSecure } = useAxiosSecure();
+  const navigate = useNavigate()
   const { user } = useAuth();
 
   const handleAddToCart = async () => {
@@ -31,7 +33,7 @@ const AddCartButton = ({ selectedPrice, number, imageFront, productCategory, pro
       
 
     } else {
-      response = await axiosSecure.post("/addToCartCookies", {addInfo});
+    navigate("/login")
     }
       // Handle success notification
       if (response.data.message) {
