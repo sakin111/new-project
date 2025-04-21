@@ -8,11 +8,36 @@ const Section1 = () => {
     const [data, isLoading, error] = useProductItem();  
     const newItems = data.filter(item => item.filter === "new")
     
-    if (isLoading) return <div>Loading....</div>;
-    if (error) return <div>Error: {error.message}</div>;
 
 
-    if (isLoading) return <div>Loading....</div>;
+
+    if (isLoading) return <div className="h-screen bg-white w-full flex justify-around items-start p-9 ">
+    <div className="flex flex-col gap-4 w-64">
+        <div className="skeleton h-32 w-full"></div>
+        <div className="skeleton h-4 w-28"></div>
+        <div className="skeleton h-4 w-full"></div>
+        <div className="skeleton h-4 w-full"></div>
+    </div>
+    <div className="flex flex-col gap-4 w-64">
+        <div className="skeleton h-32 w-full"></div>
+        <div className="skeleton h-4 w-28"></div>
+        <div className="skeleton h-4 w-full"></div>
+        <div className="skeleton h-4 w-full"></div>
+    </div>
+    <div className="flex flex-col gap-4 w-64">
+        <div className="skeleton h-32 w-full"></div>
+        <div className="skeleton h-4 w-28"></div>
+        <div className="skeleton h-4 w-full"></div>
+        <div className="skeleton h-4 w-full"></div>
+    </div>
+    <div className="flex flex-col gap-4 w-64">
+        <div className="skeleton h-32 w-full"></div>
+        <div className="skeleton h-4 w-28"></div>
+        <div className="skeleton h-4 w-full"></div>
+        <div className="skeleton h-4 w-full"></div>
+    </div>
+  
+</div>
     if (error) return <div>Error: {error.message}</div>;
 
     return (
