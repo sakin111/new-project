@@ -21,10 +21,7 @@ const Slider = () => {
 
   if (isLoading) return <div className="h-screen bg-white w-full p-9 ">
   <div className="max-w-7xl mx-auto w-full" >
-      <div className="skeleton h-32 w-full"></div>
-      <div className="skeleton h-4 w-28"></div>
-      <div className="skeleton h-4 w-full"></div>
-      <div className="skeleton h-4 w-full"></div>
+      <div className="skeleton h-96 w-full"></div>
   </div>
 
 
